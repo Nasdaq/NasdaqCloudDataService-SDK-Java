@@ -36,7 +36,7 @@ For example:
 
 ### Stream configuration
 
-  Replace example stream properties in the file **kafka-config.properties** (https://github.com/Nasdaq/CloudDataService/ncds-sdk/src/main/resources/kafaka-config.properties) with provided values during on-boarding.
+  Replace example stream properties in the file **kafka-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/kafka-config.properties) with provided values during on-boarding.
 
  Required kafka configuration 
     
@@ -44,7 +44,7 @@ For example:
 bootstrap.servers={streams_endpoint_url}:9094 #without the protocol 
 ```
     
-  For optional consumer configurations see: https://kafka.apache.org/0100/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html
+  For optional consumer configurations see: https://kafka.apache.org/0100/javadoc/org/apache/kafka/clients/consumer/ConsumerConfig.html
   
   For example:  
 ```properties
@@ -55,7 +55,7 @@ max.poll.records=2000
  
 ### Client Authentication configuration
 
-   Replace example cleint authentication properties in the file **clientAuthentication-config.properties** (https://github.com/Nasdaq/CloudDataService/ncdssdk-client/src/main/resources/clientAuthentication-config.properties) with valid credentials provided during on-boarding.
+   Replace example cleint authentication properties in the file **clientAuthentication-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/clientAuthentication-config.properties) with valid credentials provided during on-boarding.
    
 ```properties
 oauth.token.endpoint.uri=https://{auth_endpoint_url}/auth/realms/demo/protocol/openid-connect/token
@@ -73,7 +73,7 @@ javax.net.ssl.trustStoreType=PKCS12
 
 ### Create NCDS Session Client
 
-  Run `mvn clean install` command in ncdssdk-client project (https://github.com/Nasdaq/CloudDataService/ncdssdk-client). It will generate the jar file in target file.
+  Run `mvn clean install` command in ncdssdk-client project (https://github.com/Nasdaq/CloudDataService/tree/master/ncdssdk-client). It will generate the jar file in target file.
   How to run the jar:
 ```
 -opt -- Provide the operation you want to perform \n" +
@@ -283,7 +283,7 @@ while (true) {
 
 ## Documentation 
  
-   An addition to the example application, there is extra documentation at the package and class level within the JavaDocs, which are located in project ```https://github.com/Nasdaq/CloudDataService/ncds-sdk/docs```
+   An addition to the example application, there is extra documentation at the package and class level within the JavaDocs, which are located in project ```https://github.com/Nasdaq/CloudDataService/tree/master/ncds-sdk/docs```
    
    If you make an update, you can run `mvn javadocs:javadocs` to update documents.
 
