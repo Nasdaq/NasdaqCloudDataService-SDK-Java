@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+target/
+.idea/
+mdic-sdk/logs/
+ncds-sdk/logs/unittest/*
+*.iml
