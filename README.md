@@ -55,7 +55,7 @@ max.poll.records=2000
  
 ### Client Authentication configuration
 
-   Replace example cleint authentication properties in the file **clientAuthentication-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/clientAuthentication-config.properties) with valid credentials provided during on-boarding.
+   Replace example client authentication properties in the file **clientAuthentication-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/clientAuthentication-config.properties) with valid credentials provided during on-boarding.
    
 ```properties
 oauth.token.endpoint.uri=https://{auth_endpoint_url}/auth/realms/demo/protocol/openid-connect/token
