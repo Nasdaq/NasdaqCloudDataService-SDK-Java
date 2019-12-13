@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.nasdaq.ncds</groupId>
+    <artifactId>ncds</artifactId>
+    <version>0.0.1</version>
+    <packaging>pom</packaging>
+    <name>Nasdaq Cloud Data Service </name>
+
+    <organization>
+        <name>Nasdaq Cloud Data Service </name>
+        <url>https://www.nasdaq.com</url>
+    </organization>
+
+    <properties>
+        <avro.version>1.8.2</avro.version>
+        <kafka.version>2.0.1</kafka.version>
+        <kafka.version-client>2.0.1</kafka.version-client>
+        <confluent.version>5.2.2</confluent.version>
+        <checkstyle.skip>true</checkstyle.skip>
+    </properties>
+
+
+    <dependencies>
+        <!-- Avro dependency -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
+        </dependency>
+
+        <!-- Kafka dependency -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.version-client}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
+
+        <!--Kafka Auth Dependency-->
+        <dependency>
+            <groupId>io.strimzi</groupId>
+            <artifactId>kafka-oauth-client</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+
+        <!-- SFLG Logging -->
+<!--        <dependency>-->
+<!--            <groupId>org.slf4j</groupId>-->
+<!--            <artifactId>slf4j-simple</artifactId>-->
+<!--            <version>1.7.21</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.slf4j</groupId>-->
+<!--            <artifactId>slf4j-api</artifactId>-->
+<!--            <version>1.7.6</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+
+    </dependencies>
+
+    <modules>
+        <module>ncds-sdk</module>
+        <module>ncdssdk-client</module>
+    </modules>
+
+</project>

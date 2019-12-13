@@ -1,0 +1,5 @@
+com.nasdaq.ncdsclient
+com.nasdaq.ncdsclient.consumer
+com.nasdaq.ncdsclient.exceptions
+com.nasdaq.ncdsclient.internal
+com.nasdaq.ncdsclient.internal.utils
