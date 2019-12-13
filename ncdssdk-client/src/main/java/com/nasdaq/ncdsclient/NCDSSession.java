@@ -86,6 +86,7 @@ public class NCDSSession {
                 }
                 keyStorePath = cmd.valueOf("-path");
                 keyStorePassword = cmd.valueOf("-pass");
+                break;
             case "CONTSTREAM":
                 if(!cmd.hasOption("-topic")){
                     System.out.println("You must provide -topic");
