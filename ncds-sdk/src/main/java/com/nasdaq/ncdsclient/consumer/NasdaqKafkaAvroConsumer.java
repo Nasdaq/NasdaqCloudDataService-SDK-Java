@@ -1,0 +1,156 @@
+package com.nasdaq.ncdsclient.consumer;
+
+import com.nasdaq.ncdsclient.internal.AvroDeserializer;
+import com.nasdaq.ncdsclient.internal.KafkaAvroConsumer;
+import com.nasdaq.ncdsclient.internal.ReadSchemaTopic;
+import com.nasdaq.ncdsclient.internal.utils.AuthenticationConfigLoader;
+import com.nasdaq.ncdsclient.internal.utils.IsItJunit;
+import com.nasdaq.ncdsclient.internal.utils.KafkaConfigLoader;
+import io.strimzi.kafka.oauth.common.ConfigProperties;
+import org.apache.avro.Schema;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+
+
+import java.util.*;
+
+import static com.nasdaq.ncdsclient.internal.utils.AuthenticationConfigLoader.getClientID;
+
+/**
+ * This is a class which creates Kafka Consumer for Avro messages
+ *
+ * @author rucvan
+ */
+public class NasdaqKafkaAvroConsumer {
+
+    private KafkaConsumer kafkaConsumer;
+    private String clientID;
+
+    private Properties securityProps;
+    private Properties kafkaProps;
+    private ReadSchemaTopic readSchemaTopic = new ReadSchemaTopic();
+
+    public NasdaqKafkaAvroConsumer(Properties securityCfg,Properties kafkaCfg ) throws Exception {
+        try {
+            if  (kafkaCfg == null)
+                if (IsItJunit.isJUnitTest()) {
+                    Properties junitKafkaCfg = KafkaConfigLoader.loadConfig();
+                    kafkaProps = junitKafkaCfg;
+                }
+                else {
+                    throw new Exception("Kafka Configuration not Defined ");
+                }
+
+            else {
+                kafkaProps = kafkaCfg;
+                KafkaConfigLoader.validateAndAddSpecificProperties(kafkaProps);
+            }
+
+            if (securityCfg == null) {
+                securityProps = new Properties();
+                securityProps.setProperty(AuthenticationConfigLoader.OAUTH_CLIENT_ID, "unit-test"); // Just for the unit tests.
+            }
+            else {
+                securityProps = securityCfg;
+
+            }
+        }
+        catch (Exception e) {
+            throw (e);
+        }
+        readSchemaTopic.setSecurityProps(securityProps);
+        readSchemaTopic.setKafkaProps(kafkaProps);
+        this.clientID = getClientID(securityProps);
+
+    }
+
+    /**
+     * Return kafka consumer
+     * @param streamName  Kafka Message Series topic Name
+     * @return org.apache.kafka.clients.consumer.KafkaConsumer
+     * @throws Exception - Java Exception
+     */
+    public  KafkaConsumer getKafkaConsumer(String streamName) throws Exception {
+        try {
+            Schema kafkaSchema = readSchemaTopic.readSchema(streamName);
+
+            if (kafkaSchema == null) {
+                throw new Exception("Kafka Schema not Found for Stream: " + streamName);
+            }
+            kafkaConsumer = getConsumer(kafkaSchema);
+            kafkaConsumer.subscribe(Collections.singletonList(streamName + ".stream"));
+         }
+        catch (Exception e) {
+            throw (e);
+        }
+        return kafkaConsumer;
+    }
+
+    /**`
+     *
+     * @param avroSchema - Schema for the topic
+     * @return KafkaConsumer
+     * @throws Exception - Java exception
+     */
+
+
+    public  KafkaAvroConsumer getConsumer(Schema avroSchema) throws Exception {
+        try {
+            if(!IsItJunit.isJUnitTest()) {
+                ConfigProperties.resolveAndExportToSystemProperties(securityProps);
+            }
+            //Properties kafkaProps = KafkaConfigLoader.loadConfig();
+
+
+            kafkaProps.list(System.out);
+            kafkaProps.put("key.deserializer", StringDeserializer.class.getName());
+            kafkaProps.put("value.deserializer", AvroDeserializer.class.getName());
+            kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+            kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" + UUID.randomUUID().toString());
+            ConfigProperties.resolve(kafkaProps);
+            return new KafkaAvroConsumer(kafkaProps, avroSchema);
+        }
+        catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Return kafka consumer
+     * @param topic  - Topic name
+     * @return org.apache.avro.Schema
+     * @throws Exception - Java exception
+     */
+    public  Schema getSchemaForTopic(String topic) throws Exception {
+        try {
+             Schema kafkaSchema = readSchemaTopic.readSchema(topic);
+            return kafkaSchema;
+        }
+        catch (Exception e) {
+            throw (e);
+        }
+    }
+
+    /**
+     * Return all topics
+     * @return java.util.List
+     * @throws Exception - Java exception
+     */
+
+    public List<String> getTopics() throws Exception {
+        try{
+            List<String> topicsList= new ArrayList<>();
+             topicsList.addAll(readSchemaTopic.getTopics());
+            return topicsList;
+        }
+        catch (Exception e){
+            throw (e);
+        }
+    }
+
+    public void close() throws Exception{
+        kafkaConsumer.close();
+    }
+
+}
