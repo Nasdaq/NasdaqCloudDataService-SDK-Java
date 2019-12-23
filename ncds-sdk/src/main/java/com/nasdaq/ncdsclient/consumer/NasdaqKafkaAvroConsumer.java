@@ -102,11 +102,11 @@ public class NasdaqKafkaAvroConsumer {
             }
             //Properties kafkaProps = KafkaConfigLoader.loadConfig();
 
-
-            kafkaProps.list(System.out);
             kafkaProps.put("key.deserializer", StringDeserializer.class.getName());
             kafkaProps.put("value.deserializer", AvroDeserializer.class.getName());
-            kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+            if(!kafkaProps.containsKey(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)) {
+                kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+            }
             kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" + UUID.randomUUID().toString());
             ConfigProperties.resolve(kafkaProps);
             return new KafkaAvroConsumer(kafkaProps, avroSchema);
