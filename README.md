@@ -121,7 +121,7 @@ for (String topicEntry : topics) {
 
  Example output:
 ```
-Entitled DataSet Topics:
+List of streams available on Nasdaq Cloud DataService:
 GIDS
 NLSUTP
 NLSCTA

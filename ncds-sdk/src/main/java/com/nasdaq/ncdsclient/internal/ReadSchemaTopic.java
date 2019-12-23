@@ -14,6 +14,8 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import java.time.Duration;
 import java.util.*;
 
+import static com.nasdaq.ncdsclient.internal.utils.AuthenticationConfigLoader.getClientID;
+
 /**
  *  Class to Retrieve the Kafa Schema for the give Topic/Stream.
  *  1. Retrieve the schema set from the kafka Consumer using the control topic
@@ -22,7 +24,7 @@ import java.util.*;
  */
 public class ReadSchemaTopic {
 
-    private String controlSchemaName = "control";
+    private String controlSchemaName;
     private Properties securityProps;
     private Properties kafkaProps;
 
@@ -69,18 +71,20 @@ public class ReadSchemaTopic {
         return  messageSchema;
     }
     public void setSecurityProps(Properties props) {
-        securityProps = props;
+        securityProps = new Properties();
+        securityProps.putAll(props);
 
     }
     public void setKafkaProps(Properties props) {
-        kafkaProps = props;
+        kafkaProps = new Properties();
+        kafkaProps.putAll(props);
 
     }
     public Set<String> getTopics() throws Exception{
 
         Set<String> topics = new HashSet<String>();
 
-        KafkaConsumer schemaConsumer= getConsumer("Control");
+        KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
         schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
         Duration mins = Duration.ofMinutes(1);
         ConsumerRecords<String,GenericRecord> schemaRecords= schemaConsumer.poll(mins.toMillis());

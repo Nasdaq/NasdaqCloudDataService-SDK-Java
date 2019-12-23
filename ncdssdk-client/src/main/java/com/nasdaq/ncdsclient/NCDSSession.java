@@ -29,13 +29,6 @@ public class NCDSSession {
         String keyStorePassword = null;
         String numberOfTopMessage = null;
 
-        if(cmd.hasOption("-opt")){
-            testOption = cmd.valueOf("-opt");
-        }
-        else {
-            printHelpMessage();
-            System.exit(0);
-        }
         String authPropsFile = null;
         String kafkaPropsFile = null;
         if(cmd.hasOption("-authprops")){
@@ -46,6 +39,14 @@ public class NCDSSession {
         }
         Properties securityCfg = LoadAuthProperties(authPropsFile);
         Properties kafkaConfig = loadKafkaConfig(kafkaPropsFile);
+
+        if(cmd.hasOption("-opt")){
+            testOption = cmd.valueOf("-opt");
+        }
+        else {
+            printHelpMessage();
+            System.exit(0);
+        }
 
         switch (testOption) {
             case "SCHEMA":
@@ -154,7 +155,10 @@ public class NCDSSession {
             }
             else if (testOption.equals("GETMSG")) {
                 System.out.println("Finding the message");
-
+                if (kafkaConfig.containsKey("auto.offset.reset") && kafkaConfig.getProperty("auto.offset.reset").equals("latest")){
+                    System.out.println("Need to get run GETMSG with `earliest` offset");
+                    System.exit(0);
+                }
                 String msg = ncdsClient.getSampleMessages(topic, messageName);
                 if (msg != null) {
                     System.out.println(msg);
@@ -172,7 +176,15 @@ public class NCDSSession {
                 }catch (Exception e){
                     System.out.println("Error in installing certificates " + e);
                 }
-            } else if (testOption.equals("CONTSTREAM")) {
+            }
+            else if (testOption.equals("TOPICS")){
+                String[] topics = ncdsClient.ListTopicsForTheClient();
+                System.out.println("List of streams available on Nasdaq Cloud DataService:" );
+                for (String topicEntry : topics) {
+                    System.out.println(topicEntry);
+                }
+            }
+            else if (testOption.equals("CONTSTREAM")) {
                 Consumer consumer = ncdsClient.NCDSKafkaConsumer(topic);
                 try {
                     while (true) {
@@ -193,12 +205,9 @@ public class NCDSSession {
                 }
             }
             else {
-                // Dump the list of topics
-                String[] topics = ncdsClient.ListTopicsForTheClient();
-                System.out.println("List of Topics the Client Can Access " );
-                for (String topicEntry : topics) {
-                    System.out.println(topicEntry);
-                }
+                //No valid option provided
+                printHelpMessage();
+                System.exit(0);
             }
         }
         catch (Exception e) {
@@ -264,8 +273,8 @@ public class NCDSSession {
                               "        * INSTALLCERTS - Install certificate to keystore\n"+
                               "        * CONTSTREAM   - Retrieve continuous stream  \n"+
                 "        * HELP - help \n"+
-                            "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS and GETMSG \n"+
-                            "-authprops -- Provide Client Properties File path     --- For using different set of Client Authentication Properties \n"+
+                            "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG and CONTSTREAM \n"+
+                            "-authprops -- Provide Client Properties File path   --- For using different set of Client Authentication Properties \n"+
                             "-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
                             "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
                             "-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
