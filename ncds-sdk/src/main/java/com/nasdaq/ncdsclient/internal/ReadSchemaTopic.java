@@ -34,7 +34,7 @@ public class ReadSchemaTopic {
     }
 
     public Schema readSchema(String topic) throws Exception {
-        KafkaConsumer schemaConsumer= getConsumer("Control");
+        KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
         schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
         Duration mins = Duration.ofMinutes(1);
         ConsumerRecords<String,GenericRecord> schemaRecords= schemaConsumer.poll(mins.toMillis());
