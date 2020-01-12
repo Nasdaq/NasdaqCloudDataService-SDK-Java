@@ -104,8 +104,8 @@ public class NCDSSession {
         NCDSClient ncdsClient = null;
 
         try {
-            ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
             if  (testOption.equals("TOP")) {
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 int numOfRecords = Math.min(Integer.parseInt(numberOfTopMessage),999);
                 if (numOfRecords == 0) {
                     numOfRecords = 10;
@@ -135,6 +135,7 @@ public class NCDSSession {
                 }
             }
             else if  (testOption.equals("METRICS")) {
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 Map<MetricName, ? extends Metric> metrics = ncdsClient.getMetrics(topic);
                 System.out.println("Retrieve the Metrics for the Topic:" +  topic );
                 for (Metric metric : metrics.values()) {
@@ -143,6 +144,7 @@ public class NCDSSession {
                 }
             }
             else if (testOption.equals("SCHEMA")) {
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 // Dump the Schema for the topic
                 String schema = ncdsClient.getSchemaForTheTopic(topic);
                 System.out.println("Schema for the Topic:" +  topic );
@@ -154,6 +156,7 @@ public class NCDSSession {
                 }
             }
             else if (testOption.equals("GETMSG")) {
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 System.out.println("Finding the message");
                 if (kafkaConfig.containsKey("auto.offset.reset") && kafkaConfig.getProperty("auto.offset.reset").equals("latest")){
                     System.out.println("Need to get run GETMSG with `earliest` offset");
@@ -178,6 +181,7 @@ public class NCDSSession {
                 }
             }
             else if (testOption.equals("TOPICS")){
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 String[] topics = ncdsClient.ListTopicsForTheClient();
                 System.out.println("List of streams available on Nasdaq Cloud DataService:" );
                 for (String topicEntry : topics) {
@@ -185,6 +189,7 @@ public class NCDSSession {
                 }
             }
             else if (testOption.equals("CONTSTREAM")) {
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 Consumer consumer = ncdsClient.NCDSKafkaConsumer(topic);
                 try {
                     while (true) {
