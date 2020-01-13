@@ -290,7 +290,7 @@ while (true) {
 
 ## Docker
    
-   Docker images are already configured to run SDK. See here for instructions (https://github.com/Nasdaq/CloudDataService/blob/master/docker/README.md)
+   Docker images are already configured to run the SDK. View the instructions (https://github.com/Nasdaq/CloudDataService/blob/master/docker/README.md)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
