@@ -9,6 +9,7 @@ This repository provides an SDK for developing applications to access the NCDS A
  - [Getting Started](#Getting-Started)
  - [Using the SDK](#Using-The-SDK)
  - [Documentation](#Documentation)
+ - [Docker](#Docker)
  - [Contributing](#Contributing)
  - [License](#License)
  
@@ -286,6 +287,10 @@ while (true) {
    An addition to the example application, there is extra documentation at the package and class level within the JavaDocs, which are located in project ```https://github.com/Nasdaq/CloudDataService/tree/master/ncds-sdk/docs```
    
    If you make an update, you can run `mvn javadocs:javadocs` to update documents.
+
+## Docker
+   
+   Docker images are already configured to run the SDK. View the instructions (https://github.com/Nasdaq/CloudDataService/blob/master/docker/README.md)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

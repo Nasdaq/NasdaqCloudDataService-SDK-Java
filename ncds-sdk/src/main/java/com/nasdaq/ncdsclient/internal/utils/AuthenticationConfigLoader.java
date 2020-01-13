@@ -59,19 +59,19 @@ public class AuthenticationConfigLoader {
         if (cfg.getProperty(OAUTH_TOKEN_ENDPOINT_URI) == null) {
           throw new Exception ("Authentication Setting :" + OAUTH_TOKEN_ENDPOINT_URI  + " Missing" );
         }
-        if (cfg.getProperty(OAUTH_CLIENT_ID) == null) {
+        if (cfg.getProperty(OAUTH_CLIENT_ID) == null && System.getenv("OAUTH_CLIENT_ID") == null ) {
             throw new Exception ("Authentication Setting :" + OAUTH_CLIENT_ID  + " Missing" );
         }
-        if (cfg.getProperty(OAUTH_CLIENT_SECRET) == null) {
+        if (cfg.getProperty(OAUTH_CLIENT_SECRET) == null && System.getenv("OAUTH_CLIENT_SECRET") == null) {
             throw new Exception("Authentication Setting :" + OAUTH_CLIENT_SECRET  + " Missing" );
         }
         if (cfg.getProperty(OAUTH_USERNAME_CLAIM) == null) {
             throw new Exception("Authentication Setting :" + OAUTH_USERNAME_CLAIM  + " Missing" );
         }
-        if (cfg.getProperty(JAVAX_NET_SSL_TRUSTSTORE) == null) {
+        if (cfg.getProperty(JAVAX_NET_SSL_TRUSTSTORE) == null && System.getenv("JAVAX_NET_SSL_TRUSTSTORE") == null) {
             throw new Exception("Authentication Setting :" + JAVAX_NET_SSL_TRUSTSTORE  + " Missing" );
         }
-        if (cfg.getProperty(JAVAX_NET_SSL_TRUSTSTOREPASSWORD) == null) {
+        if (cfg.getProperty(JAVAX_NET_SSL_TRUSTSTOREPASSWORD) == null && System.getenv("JAVAX_NET_SSL_TRUSTSTOREPASSWORD") == null) {
             throw new Exception ("Authentication Setting :" + JAVAX_NET_SSL_TRUSTSTOREPASSWORD  + " Missing" );
         }
         if (cfg.getProperty(JAVAX_NET_SSL_TRUSTSTORETYPE) == null) {
