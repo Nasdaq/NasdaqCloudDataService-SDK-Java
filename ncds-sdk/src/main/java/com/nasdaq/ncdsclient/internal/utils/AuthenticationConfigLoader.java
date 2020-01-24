@@ -42,7 +42,12 @@ public class AuthenticationConfigLoader {
         String clientID;
         try {
            if(!IsItJunit.isJUnitTest()){
-                clientID = cfg.getProperty(OAUTH_CLIENT_ID);
+                if (System.getenv("OAUTH_CLIENT_ID") == null) {
+                    clientID = cfg.getProperty(OAUTH_CLIENT_ID);
+                }
+                else {
+                    clientID = System.getenv("OAUTH_CLIENT_ID");
+                }
             }
             else {
                 clientID = "unit-test";
