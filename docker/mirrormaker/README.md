@@ -1,5 +1,5 @@
 # Nasdaq Cloud Data Service - Kafka mirroring with MirrorMaker
-Kafka's mirroring feature makes it possible to maintain a replica of an existing Kafka cluster. The tool uses a Kafka consumer to consume messages from the source cluster, and re-publishes those messages to the local (target) cluster using an embedded Kafka producer. (https://kafka.apache.org/documentation.html#basic_ops_mirror_maker)
+This tool uses a Kafka consumer to consume messages from the source cluster, and re-publishes those messages to the local (target) cluster using an embedded Kafka producer. (https://kafka.apache.org/documentation.html#basic_ops_mirror_maker)
 
 ## Running Mirror Maker on docker
 This example shows how to setup standalone Mirror Maker instance application. 
