@@ -36,4 +36,5 @@ docker run -e "OAUTH_CLIENT_ID={clinet-id-value}" -e "OAUTH_CLIENT_SECRET={clien
  docker run -e "OAUTH_CLIENT_ID={clinet-id-value}" -e "OAUTH_CLIENT_SECRET={client-secret-value} -e "JAVAX_NET_SSL_TRUSTSTOREPASSWORD={trsustore-pass}" sdk-app:latest -opt TOP -n 10 -topic GIDS
 ```
 
-     
+## Nasdaq Cloud Data Service - Kafka mirroring with MirrorMaker
+Kafka's mirroring feature makes it possible to maintain a replica of an existing Kafka cluster. (https://github.com/Nasdaq/CloudDataService/tree/master/docker/mirrormaker)     
