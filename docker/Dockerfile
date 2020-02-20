@@ -10,18 +10,18 @@ RUN mvn -B \
 
 ### Build Images ###
 ## SDK app ##
-FROM java:8 as sdk-app
+FROM strimzi/kafka:0.14.0-kafka-2.3.0 as sdk-app
 
-COPY . .
+COPY . /home/kafka
 
-COPY --from=builder /ncdssdk-client/target/ncdssdk-client.jar app.jar
+COPY --from=builder /ncdssdk-client/target/ncdssdk-client.jar /home/kafka/app.jar
 
-RUN mkdir /truststore
+WORKDIR /home/kafka
 
-RUN chmod 777 /docker/run-sdk-app.sh
+RUN mkdir truststore
 
-ENV JAVAX_NET_SSL_TRUSTSTORE=/truststore/ncdsTrustStore.p12
+ENV JAVAX_NET_SSL_TRUSTSTORE=truststore/ncdsTrustStore.p12
 
-ENTRYPOINT ["bash","/docker/run-sdk-app.sh"]
+ENTRYPOINT ["bash","docker/run-sdk-app.sh"]
 
 CMD ["-opt", "TOPICS"]
