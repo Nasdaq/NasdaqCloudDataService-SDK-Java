@@ -85,6 +85,7 @@ javax.net.ssl.trustStoreType=PKCS12
   "        * GETMSG - Get one example message for the\n"+
   "        * INSTALLCERTS - Install certificate to keystore\n"+
   "        * CONTSTREAM   - Retrieve continuous stream  \n"+
+  "        * NEWS - Get stream for Pro Global news stream\n"+
   "        * HELP - help \n"+
 "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS and GETMSG \n"+
 "-authprops -- Provide Client Properties File path     --- For using different set of Client Authentication Properties \n"+
@@ -245,6 +246,49 @@ while (true) {
 }
 ```
 
+### Get News stream
+```java
+NCDSClient ncdsClient = new NCDSClient();
+Consumer consumer = ncdsClient.NCDSNewsKafkaConsumer();
+while (true) {
+    ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofMinutes(Integer.parseInt("1")));
+    if (records.count() == 0) {
+        System.out.println("No Records Found for the News");
+    }
+    for (ConsumerRecord<String, GenericRecord> record : records) {
+        System.out.println("News :" + News.newsBuilder(record.value()).toString());
+    }
+}
+```
+
+ Example output:
+```-----------------------------------------------------------------------------------------------
+   News :ReleaseTime: 2020/04/03 14:40:00
+   TransmissionID: A2136726
+   RevisionID: 0
+   Retract: FALSE
+   StoryType:
+   TechnicalStory: FALSE
+   metaDataNode:
+   STOK.MN
+   EARN.MN
+   USUS.MN
+   NOAM.MN
+   INBY.MN
+   INSL.MN
+   FOR4.MN
+   EECH.MN
+   
+   HeadLine: {Headlines}
+   Body:
+   {Body}
+   Tickers: {tickers}
+   CopyRight: Copyright © 2020 MT Newswires, All Rights reserved. Data provided by UpTick Data Technologies.
+   ISIN: null
+   ArticleImage: null
+   -----------------------------------------------------------------------------------------------
+
+```
 
 ### Example syntax to run the Client Jar based on this SDK
 
