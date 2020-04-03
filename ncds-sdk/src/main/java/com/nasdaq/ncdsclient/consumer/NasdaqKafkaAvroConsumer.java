@@ -6,6 +6,7 @@ import com.nasdaq.ncdsclient.internal.ReadSchemaTopic;
 import com.nasdaq.ncdsclient.internal.utils.AuthenticationConfigLoader;
 import com.nasdaq.ncdsclient.internal.utils.IsItJunit;
 import com.nasdaq.ncdsclient.internal.utils.KafkaConfigLoader;
+import com.nasdaq.ncdsclient.news.NewsUtil;
 import io.strimzi.kafka.oauth.common.ConfigProperties;
 import org.apache.avro.Schema;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -153,4 +154,18 @@ public class NasdaqKafkaAvroConsumer {
         kafkaConsumer.close();
     }
 
+    public KafkaConsumer getNewsConsumer() throws Exception {
+        try{
+            Schema newsSchema = NewsUtil.getNewsSchema();
+            if (newsSchema == null) {
+                throw new Exception("News Schema not Found ");
+            }
+            kafkaConsumer = getConsumer(newsSchema);
+            kafkaConsumer.subscribe(Collections.singletonList("NEWS-PRO-GLOBAL.stream"));
+            return kafkaConsumer;
+        }
+        catch (Exception e){
+            throw (e);
+        }
+    }
 }

@@ -93,6 +93,20 @@ public class NCDSClient {
         }
     }
 
+    /**
+     * Return nasdaq's News kafka consumer
+     * @return org.apache.kafka.clients.consumer.KafkaConsumer
+     * @throws Exception  - Java Exception
+     */
+    public KafkaConsumer NCDSNewsKafkaConsumer() throws Exception {
+        try {
+            return nasdaqKafkaAvroConsumer.getNewsConsumer();
+        }
+        catch (Exception e) {
+            throw (e);
+        }
+    }
+
     //get metric on cosumer
     /**
      * Return first 10 messages of the given topic
