@@ -1,6 +1,7 @@
 package com.nasdaq.ncdsclient;
 
 import com.nasdaq.ncdsclient.internal.utils.InstallCertificates;
+import com.nasdaq.ncdsclient.news.News;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -97,6 +98,9 @@ public class NCDSSession {
                 }
                 topic = cmd.valueOf("-topic");
                 break;
+            case "NEWS":
+                topic = "NEWS-PRO-GLOBAL.stream";
+                break;
             default:
         }
 
@@ -188,6 +192,32 @@ public class NCDSSession {
                     System.out.println(topicEntry);
                 }
             }
+            else if (testOption.equals("NEWS")){
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
+                Consumer ncdsmtNewsKafkaConsumer = ncdsClient.NCDSNewsKafkaConsumer();
+                System.out.println("Now starting the news!!" );
+                try {
+                    while (true) {
+                        //ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofMinutes(Integer.parseInt("1")));
+                        ConsumerRecords<String, GenericRecord> records = ncdsmtNewsKafkaConsumer.poll(Long.MAX_VALUE);
+                        if (records.count() == 0) {
+                            System.out.println("No Records Found for the Topic:" + topic);
+                        }
+                        for (ConsumerRecord<String, GenericRecord> record : records) {
+                            System.out.println("-----------------------------------------------------------------------------------------------");
+                            System.out.println("News :" + News.newsBuilder(record.value()).toString());
+                            System.out.println("-----------------------------------------------------------------------------------------------");
+                        }
+                        ncdsmtNewsKafkaConsumer.commitAsync();
+                    }
+                } catch (WakeupException e) {
+                    // ignore for shutdown
+                    System.out.println("Error in cont stream");
+                } finally {
+                    ncdsmtNewsKafkaConsumer.close();
+                }
+
+            }
             else if (testOption.equals("CONTSTREAM")) {
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 Consumer consumer = ncdsClient.NCDSKafkaConsumer(topic);
@@ -201,6 +231,7 @@ public class NCDSSession {
                         for (ConsumerRecord<String, GenericRecord> record : records) {
                             System.out.println("value :" + record.value().toString());
                         }
+                        consumer.commitAsync();
                     }
                 } catch (WakeupException e) {
                     // ignore for shutdown
