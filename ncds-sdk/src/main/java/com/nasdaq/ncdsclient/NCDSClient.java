@@ -98,9 +98,9 @@ public class NCDSClient {
      * @return org.apache.kafka.clients.consumer.KafkaConsumer
      * @throws Exception  - Java Exception
      */
-    public KafkaConsumer NCDSNewsKafkaConsumer() throws Exception {
+    public KafkaConsumer NCDSNewsKafkaConsumer(String topic) throws Exception {
         try {
-            return nasdaqKafkaAvroConsumer.getNewsConsumer();
+            return nasdaqKafkaAvroConsumer.getNewsConsumer(topic);
         }
         catch (Exception e) {
             throw (e);
