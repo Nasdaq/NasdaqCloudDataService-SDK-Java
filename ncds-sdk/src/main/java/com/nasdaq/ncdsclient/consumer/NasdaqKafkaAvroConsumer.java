@@ -154,14 +154,14 @@ public class NasdaqKafkaAvroConsumer {
         kafkaConsumer.close();
     }
 
-    public KafkaConsumer getNewsConsumer() throws Exception {
+    public KafkaConsumer getNewsConsumer(String topic) throws Exception {
         try{
             Schema newsSchema = NewsUtil.getNewsSchema();
             if (newsSchema == null) {
                 throw new Exception("News Schema not Found ");
             }
             kafkaConsumer = getConsumer(newsSchema);
-            kafkaConsumer.subscribe(Collections.singletonList("NEWS-PRO-GLOBAL.stream"));
+            kafkaConsumer.subscribe(Collections.singletonList(topic+".stream"));
             return kafkaConsumer;
         }
         catch (Exception e){

@@ -87,7 +87,7 @@ javax.net.ssl.trustStoreType=PKCS12
   "        * CONTSTREAM   - Retrieve continuous stream  \n"+
   "        * NEWS - Get stream for Pro Global news stream\n"+
   "        * HELP - help \n"+
-"-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS and GETMSG \n"+
+"-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM and NEWS \n"+
 "-authprops -- Provide Client Properties File path     --- For using different set of Client Authentication Properties \n"+
 "-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
 "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
@@ -249,7 +249,8 @@ while (true) {
 ### Get News stream
 ```java
 NCDSClient ncdsClient = new NCDSClient();
-Consumer consumer = ncdsClient.NCDSNewsKafkaConsumer();
+String topic="NEWS-PRO-GLOBAL"
+Consumer consumer = ncdsClient.NCDSNewsKafkaConsumer(topic);
 while (true) {
     ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofMinutes(Integer.parseInt("1")));
     if (records.count() == 0) {
