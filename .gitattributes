@@ -1,0 +1,30 @@
+# Java sources
+*.java          text diff=java
+*.gradle        text diff=java
+*.gradle.kts    text diff=java
+
+# These files are text and should be normalized (Convert crlf => lf)
+*.css           inguist-detectable=false
+*.df            inguist-detectable=false
+*.htm           inguist-detectable=false
+*.html          inguist-detectable=false
+*.js            inguist-detectable=false
+*.jsp           inguist-detectable=false
+*.jspf          text
+*.jspx          text
+*.properties    text
+*.tld           text
+*.tag           text
+*.tagx          text
+*.xml           inguist-detectable=false
+
+
+ncds-sdk/docs/* linguist-documentation
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.class         binary
+*.dll           binary
+*.ear           binary
+*.jar           binary
+*.so            binary

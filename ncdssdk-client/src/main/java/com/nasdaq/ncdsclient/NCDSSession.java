@@ -90,6 +90,7 @@ public class NCDSSession {
                 keyStorePassword = cmd.valueOf("-pass");
                 break;
             case "CONTSTREAM":
+            case "NEWS":
                 if(!cmd.hasOption("-topic")){
                     System.out.println("You must provide -topic");
                     printHelpMessage();
@@ -97,9 +98,6 @@ public class NCDSSession {
                     break;
                 }
                 topic = cmd.valueOf("-topic");
-                break;
-            case "NEWS":
-                topic = "NEWS-PRO-GLOBAL.stream";
                 break;
             default:
         }
@@ -194,7 +192,7 @@ public class NCDSSession {
             }
             else if (testOption.equals("NEWS")){
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
-                Consumer ncdsmtNewsKafkaConsumer = ncdsClient.NCDSNewsKafkaConsumer();
+                Consumer ncdsmtNewsKafkaConsumer = ncdsClient.NCDSNewsKafkaConsumer(topic);
                 System.out.println("Now starting the news!!" );
                 try {
                     while (true) {
@@ -308,8 +306,9 @@ public class NCDSSession {
                               "        * GETMSG - Get one example message for the\n"+
                               "        * INSTALLCERTS - Install certificate to keystore\n"+
                               "        * CONTSTREAM   - Retrieve continuous stream  \n"+
+                              "        * NEWS - Retrieve news stream               \n"+
                 "        * HELP - help \n"+
-                            "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG and CONTSTREAM \n"+
+                            "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM and NEWS  \n"+
                             "-authprops -- Provide Client Properties File path   --- For using different set of Client Authentication Properties \n"+
                             "-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
                             "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
