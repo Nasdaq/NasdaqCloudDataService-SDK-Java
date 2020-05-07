@@ -28,7 +28,6 @@ public class ReadSchemaTopic {
     private Properties securityProps;
     private Properties kafkaProps;
 
-
     public ReadSchemaTopic(){
         this.controlSchemaName="control";
     }
@@ -36,8 +35,8 @@ public class ReadSchemaTopic {
     public Schema readSchema(String topic) throws Exception {
         KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
         schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
-        Duration mins = Duration.ofMinutes(1);
-        ConsumerRecords<String,GenericRecord> schemaRecords= schemaConsumer.poll(mins.toMillis());
+        //Duration mins = Duration.ofMinutes(5);
+        ConsumerRecords<String,GenericRecord> schemaRecords= schemaConsumer.poll(Long.MAX_VALUE);
         Schema messageSchema = null;
         ConsumerRecord<String,GenericRecord> lastRecord=null;
 
@@ -68,6 +67,12 @@ public class ReadSchemaTopic {
             messageSchema = Schema.parse(lastRecord.value().get("schema").toString());
         }
         schemaConsumer.close();
+
+        if (messageSchema==null){
+            System.out.println("WARNING: Using the Old Schema!! It might not be latest schema");
+            messageSchema= internalSchema(topic);
+        }
+
         return  messageSchema;
     }
     public void setSecurityProps(Properties props) {
@@ -128,6 +133,7 @@ public class ReadSchemaTopic {
             kafkaProps.put("value.deserializer", AvroDeserializer.class.getName());
             kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
             kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, cleindId + "_" + UUID.randomUUID().toString());
+            kafkaProps.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "2048576");
             ConfigProperties.resolve(kafkaProps);
         }
         catch (Exception e) {
@@ -136,4 +142,16 @@ public class ReadSchemaTopic {
         return new KafkaAvroConsumer(kafkaProps, controlMessageSchema);
 
     }
+
+    private Schema internalSchema (String topic) throws Exception {
+        try {
+            final Schema topicSchema;
+            Schema.Parser parser = new Schema.Parser();
+            topicSchema = parser.parse(ClassLoader.getSystemResourceAsStream("schemas/" + topic + ".avsc"));
+            return topicSchema;
+        } catch (Exception e){
+            throw new Exception("SCHEMA NOT FOUND FOR TOPIC: "+ topic);
+        }
+    }
+
    }
