@@ -94,6 +94,22 @@ public class NCDSClient {
     }
 
     /**
+     * Return nasdaq's market data kafka consumer
+     * @param topic - Topic/Stream name
+     * @param timestamp - timestamp in milliseconds since the UNIX epoch
+     * @return org.apache.kafka.clients.consumer.KafkaConsumer
+     * @throws Exception  - Java Exception
+     */
+    public KafkaConsumer NCDSKafkaConsumer(String topic, long timestamp) throws Exception {
+        try {
+            return nasdaqKafkaAvroConsumer.getKafkaConsumer(topic, timestamp);
+        }
+        catch (Exception e) {
+            throw (e);
+        }
+    }
+
+    /**
      * Return nasdaq's News kafka consumer
      * @return org.apache.kafka.clients.consumer.KafkaConsumer
      * @throws Exception  - Java Exception
@@ -118,6 +134,27 @@ public class NCDSClient {
         try {
             Duration mins = Duration.ofMinutes(Integer.parseInt("1"));
             KafkaConsumer kafkaConsumer = NCDSKafkaConsumer(topicName);
+            ConsumerRecords<String, GenericRecord> records = kafkaConsumer.poll( mins.toMillis());
+            kafkaConsumer.close();
+            return records;
+        }
+        catch (Exception e) {
+            throw (e);
+        }
+
+    }
+
+    /**
+     * Return first 10 messages of the given topic
+     * @param topicName - Topic/Stream name
+     * @param timestamp - timestamp in milliseconds since the UNIX epoch
+     * @return Map of key and Record Value
+     * @throws Exception  - Java Exception
+     */
+    public ConsumerRecords<String, GenericRecord> topMessages(String topicName, long timestamp) throws Exception {
+        try {
+            Duration mins = Duration.ofMinutes(Integer.parseInt("1"));
+            KafkaConsumer kafkaConsumer = NCDSKafkaConsumer(topicName, timestamp);
             ConsumerRecords<String, GenericRecord> records = kafkaConsumer.poll( mins.toMillis());
             kafkaConsumer.close();
             return records;
