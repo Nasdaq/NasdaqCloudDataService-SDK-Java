@@ -10,7 +10,10 @@ import com.nasdaq.ncdsclient.news.NewsUtil;
 import io.strimzi.kafka.oauth.common.ConfigProperties;
 import org.apache.avro.Schema;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 
@@ -86,6 +89,46 @@ public class NasdaqKafkaAvroConsumer {
             throw (e);
         }
         return kafkaConsumer;
+    }
+
+    /**
+     * Return kafka consumer
+     * @param streamName  Kafka Message Series topic Name
+     * @param timestamp - timestamp in milliseconds since the UNIX epoch
+     * @return org.apache.kafka.clients.consumer.KafkaConsumer
+     * @throws Exception - Java Exception
+     */
+    public KafkaConsumer getKafkaConsumer(String streamName, long timestamp) throws Exception {
+
+        try{
+            Schema kafkaSchema = readSchemaTopic.readSchema(streamName);
+
+            if (kafkaSchema == null) {
+                throw new Exception("Kafka Schema not Found for Stream: " + streamName);
+            }
+            kafkaConsumer = getConsumer(kafkaSchema);
+
+            kafkaConsumer.subscribe(Collections.singletonList(streamName + ".stream"), new ConsumerRebalanceListener() {
+                @Override
+                public void onPartitionsRevoked(Collection<TopicPartition> collection) {
+
+                }
+
+                @Override
+                public void onPartitionsAssigned(Collection<TopicPartition> collection) {
+                    Map<TopicPartition,Long> timestmaps = new HashMap();
+                    TopicPartition topicPartition = new TopicPartition(streamName + ".stream",0);
+                    timestmaps.put(topicPartition , timestamp);
+                    Map<TopicPartition, OffsetAndTimestamp> offsetsForTimes = kafkaConsumer.offsetsForTimes(timestmaps);
+                    System.out.println("Offset: "+ offsetsForTimes.get(topicPartition).offset());
+                    kafkaConsumer.seek(topicPartition, offsetsForTimes.get(topicPartition).offset());
+                }
+            });
+            return kafkaConsumer;
+        }
+        catch (Exception e){
+            throw (e);
+        }
     }
 
     /**`
