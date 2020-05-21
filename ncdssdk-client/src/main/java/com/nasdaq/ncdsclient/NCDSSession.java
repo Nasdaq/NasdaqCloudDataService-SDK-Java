@@ -29,6 +29,7 @@ public class NCDSSession {
         String keyStorePath = null;
         String keyStorePassword = null;
         String numberOfTopMessage = null;
+        Long timestamp = null;
 
         String authPropsFile = null;
         String kafkaPropsFile = null;
@@ -66,6 +67,15 @@ public class NCDSSession {
                     System.exit(0);
                     break;
                 }
+                if(cmd.hasOption("-timestamp"))
+                {
+                    try {
+                        timestamp = Long.parseLong(cmd.valueOf("-timestamp"));
+                    } catch (NumberFormatException e){
+                        System.out.println("You must provide timestamp in long format");
+                        System.exit(0);
+                    }
+                }
                 topic = cmd.valueOf("-topic");
                 numberOfTopMessage = cmd.valueOf("-n");
                 break;
@@ -90,6 +100,23 @@ public class NCDSSession {
                 keyStorePassword = cmd.valueOf("-pass");
                 break;
             case "CONTSTREAM":
+                if(!cmd.hasOption("-topic")){
+                    System.out.println("You must provide -topic");
+                    printHelpMessage();
+                    System.exit(0);
+                    break;
+                }
+                if(cmd.hasOption("-timestamp"))
+                {
+                    try {
+                        timestamp = Long.parseLong(cmd.valueOf("-timestamp"));
+                    } catch (NumberFormatException e){
+                        System.out.println("You must provide timestamp in long format");
+                        System.exit(0);
+                    }
+                }
+                topic = cmd.valueOf("-topic");
+                break;
             case "NEWS":
                 if(!cmd.hasOption("-topic")){
                     System.out.println("You must provide -topic");
@@ -112,7 +139,13 @@ public class NCDSSession {
                 if (numOfRecords == 0) {
                     numOfRecords = 10;
                 }
-                ConsumerRecords<String, GenericRecord> records = ncdsClient.topMessages(topic);
+                ConsumerRecords<String, GenericRecord> records;
+                if (timestamp == null){
+                    records = ncdsClient.topMessages(topic);
+                }
+                else {
+                    records = ncdsClient.topMessages(topic, timestamp);
+                }
                 System.out.println("Top " + numOfRecords + " Records for the Topic:" +  topic );
                 if (records != null) {
                     if (records.count() == 0) {
@@ -218,7 +251,13 @@ public class NCDSSession {
             }
             else if (testOption.equals("CONTSTREAM")) {
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
-                Consumer consumer = ncdsClient.NCDSKafkaConsumer(topic);
+                Consumer consumer;
+                if (timestamp == null){
+                    consumer = ncdsClient.NCDSKafkaConsumer(topic);
+                }
+                else {
+                    consumer = ncdsClient.NCDSKafkaConsumer(topic, timestamp);
+                }
                 try {
                     while (true) {
                         //ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofMinutes(Integer.parseInt("1")));
@@ -314,8 +353,8 @@ public class NCDSSession {
                             "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
                             "-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
                             "-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS \n"+
-                            "-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"
-
+                            "-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"+
+                            "-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP and CONTSTREAM \n"
         );
     }
 }
