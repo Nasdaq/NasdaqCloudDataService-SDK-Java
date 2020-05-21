@@ -102,7 +102,8 @@ javax.net.ssl.trustStoreType=PKCS12
 "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
 "-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
 "-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS \n"+
-"-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"
+"-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"+
+"-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP and CONTSTREAM \n"
 ```
  
   Few examples to use jar:
@@ -196,7 +197,7 @@ System.out.println(schema);
 ```java
 // Example2.java
 NCDSClient ncdsClient = new NCDSClient();
-String topic="NLSCTA"
+String topic="NLSCTA";
 ConsumerRecords<String, GenericRecord> records = ncdsClient.topMessages(topic);
 for (ConsumerRecord<String, GenericRecord> record : records) {
     System.out.println("key:" + record.key());
@@ -225,6 +226,45 @@ key:9
 value:{"SoupPartition": 0, "SoupSequence": 9, "trackingID": 11231714764805, "msgType": "G", "symbol": "AADR    ", "securityClass": "P", "adjClosingPrice": 499000}
 key:10
 value:{"SoupPartition": 0, "SoupSequence": 10, "trackingID": 11231714853049, "msgType": "R", "symbol": "AAMC    ", "marketClass": "A", "fsi": " ", "roundLotSize": 100, "roundLotOnly": "N", "issueClass": "C", "issueSubtype": "Z ", "authenticity": "P", "shortThreshold": "N", "ipo": " ", "luldTier": "2", "etf": "N", "etfFactor": 0, "inverseETF": "N", "compositeId": "BBG003PNL136"}    
+```
+
+### Get first 10 messages of the stream from given timestamp
+ This returns the first 10 available messages of the stream from given timestamp in milliseconds since the UNIX epoch.
+```java
+// Example3.java
+NCDSClient ncdsClient = new NCDSClient();
+String topic="NLSCTA";
+Long timestamp = 1590084445610L; // This is timestamp in millseconds from UNIX epoch. (https://currentmillis.com/)
+ConsumerRecords<String, GenericRecord> records = ncdsClient.topMessages(topic, timestamp);
+for (ConsumerRecord<String, GenericRecord> record : records) {
+    System.out.println("key:" + record.key());
+    System.out.println("value:" + record.value().toString());
+}
+```
+ Example output:
+ ```
+Offset: 105834100
+Top 10 Records for the Topic:NLSCTA
+key:9362630
+value :{"SoupPartition": 0, "SoupSequence": 9362630, "trackingID": 50845551492208, "msgType": "T", "marketCenter": "L", "symbol": "SIVR    ", "securityClass": "P", "controlNumber": "0000A2MLOB", "price": 164797, "size": 1, "saleCondition": "@  o", "cosolidatedVolume": 520174}
+key:9362631
+value :{"SoupPartition": 0, "SoupSequence": 9362631, "trackingID": 50845557908136, "msgType": "T", "marketCenter": "Q", "symbol": "TJX     ", "securityClass": "N", "controlNumber": "   8358213", "price": 540300, "size": 100, "saleCondition": "@   ", "cosolidatedVolume": 16278768}
+key:9362632
+value :{"SoupPartition": 0, "SoupSequence": 9362632, "trackingID": 50845565203932, "msgType": "T", "marketCenter": "L", "symbol": "CMI     ", "securityClass": "N", "controlNumber": "0000A2MLOC", "price": 1579900, "size": 100, "saleCondition": "@   ", "cosolidatedVolume": 568622}
+key:9362633
+value :{"SoupPartition": 0, "SoupSequence": 9362633, "trackingID": 50845565791061, "msgType": "T", "marketCenter": "L", "symbol": "UTI     ", "securityClass": "N", "controlNumber": "0000A2MLOD", "price": 70150, "size": 64, "saleCondition": "@  o", "cosolidatedVolume": 151359}
+key:9362634
+value :{"SoupPartition": 0, "SoupSequence": 9362634, "trackingID": 50845566628604, "msgType": "T", "marketCenter": "L", "symbol": "UFS     ", "securityClass": "N", "controlNumber": "0000A2MLOE", "price": 203660, "size": 24, "saleCondition": "@  o", "cosolidatedVolume": 664962}
+key:9362635
+value :{"SoupPartition": 0, "SoupSequence": 9362635, "trackingID": 50845569154140, "msgType": "T", "marketCenter": "L", "symbol": "KR      ", "securityClass": "N", "controlNumber": "0000A2MLOF", "price": 320350, "size": 100, "saleCondition": "@   ", "cosolidatedVolume": 4054473}
+key:9362636
+value :{"SoupPartition": 0, "SoupSequence": 9362636, "trackingID": 50845577944984, "msgType": "T", "marketCenter": "L", "symbol": "PAGP    ", "securityClass": "N", "controlNumber": "0000A2MLOG", "price": 98350, "size": 100, "saleCondition": "@   ", "cosolidatedVolume": 1557084}
+key:9362637
+value :{"SoupPartition": 0, "SoupSequence": 9362637, "trackingID": 50845588007117, "msgType": "T", "marketCenter": "L", "symbol": "LUV     ", "securityClass": "N", "controlNumber": "0000A2MLOH", "price": 297413, "size": 4, "saleCondition": "@  o", "cosolidatedVolume": 16791899}
+key:9362638
+value :{"SoupPartition": 0, "SoupSequence": 9362638, "trackingID": 50845596356365, "msgType": "T", "marketCenter": "L", "symbol": "M       ", "securityClass": "N", "controlNumber": "0000A2MLOI", "price": 54000, "size": 10, "saleCondition": "@  o", "cosolidatedVolume": 39273663}
+key:9362639
+value :{"SoupPartition": 0, "SoupSequence": 9362639, "trackingID": 50845600594567, "msgType": "T", "marketCenter": "L", "symbol": "TTM     ", "securityClass": "N", "controlNumber": "0000A2MLOJ", "price": 56000, "size": 400, "saleCondition": "@   ", "cosolidatedVolume": 1293244}
 ```
 
 ### Get example message from stream
@@ -333,6 +373,10 @@ while (true) {
 8. To install the certificates
 
   ```java -jar ncdssdk-client.jar -opt INSTALLCERTS -path /home/ec2-user/testInstallCerts -pass testuser```
+
+9. To dump top n records from the given topic from given timestamp in milliseconds since the UNIX epoch
+
+  ```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -timestamp 1590084445610 ```
 
  
 
