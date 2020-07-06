@@ -2,6 +2,8 @@ package com.nasdaq.ncdsclient;
 
 import com.nasdaq.ncdsclient.internal.utils.InstallCertificates;
 import com.nasdaq.ncdsclient.news.News;
+
+import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -10,13 +12,14 @@ import org.apache.kafka.common.Metric;
 import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.errors.WakeupException;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.time.Duration;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class NCDSSession {
 
@@ -25,6 +28,8 @@ public class NCDSSession {
         CommandOptions cmd = new CommandOptions(args);
         String testOption = null;
         String topic = null;
+        String symbols = null;
+        String msgTypes = null;
         String messageName = null;
         String keyStorePath = null;
         String keyStorePassword = null;
@@ -100,6 +105,7 @@ public class NCDSSession {
                 keyStorePassword = cmd.valueOf("-pass");
                 break;
             case "CONTSTREAM":
+            case "FILTERSTREAM":
                 if(!cmd.hasOption("-topic")){
                     System.out.println("You must provide -topic");
                     printHelpMessage();
@@ -116,6 +122,9 @@ public class NCDSSession {
                     }
                 }
                 topic = cmd.valueOf("-topic");
+                // optional -symbols and -msgtypes
+                symbols = cmd.valueOf("-symbols");
+                msgTypes = cmd.valueOf("-msgtypes");
                 break;
             case "NEWS":
                 if(!cmd.hasOption("-topic")){
@@ -277,6 +286,71 @@ public class NCDSSession {
                     consumer.close();
                 }
             }
+            else if (testOption.equals("FILTERSTREAM")) {
+                Set<String> symbolSet = null;
+                Set<String> msgTypeSet = null;
+
+                if (symbols != null) {
+                    symbolSet = Arrays.stream(symbols.split(",")).map(String::trim).collect(Collectors.toSet());
+                    if (symbolSet.size() == 0) {
+                        System.out.println("no symbols parsed in -symbols. Ex: -symbols XXX,YYY,ZZZ");
+                        printHelpMessage();
+                        System.exit(0);
+                    }
+                }
+                if (msgTypes != null) {
+                    msgTypeSet = Arrays.stream(msgTypes.split(",")).map(String::trim).collect(Collectors.toSet());
+                    if (msgTypeSet.size() == 0) {
+                        System.out.println("no symbols parsed in -msgtypes. Ex: -msgtypes A,B,C");
+                        printHelpMessage();
+                        System.exit(0);
+                    }
+                }
+
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
+                Consumer consumer;
+                if (timestamp == null){
+                    consumer = ncdsClient.NCDSKafkaConsumer(topic);
+                }
+                else {
+                    consumer = ncdsClient.NCDSKafkaConsumer(topic, timestamp);
+                }
+                try {
+                    while (true) {
+                        //ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofMinutes(Integer.parseInt("1")));
+                        ConsumerRecords<String, GenericRecord> records = consumer.poll(Long.MAX_VALUE);
+                        if (records.count() == 0) {
+                            System.out.println("No Records Found for the Topic:" + topic);
+                        }
+                        for (ConsumerRecord<String, GenericRecord> record : records) {
+                            Schema.Field symbolField = record.value().getSchema().getField("symbol");
+                            Schema.Field msgTypeField = record.value().getSchema().getField("msgType");
+                            String sym = null;
+                            String msg_t = null;
+                            if (symbolField != null) {
+                                sym = ((org.apache.avro.util.Utf8) record.value().get(symbolField.pos())).toString().trim();
+                            }
+                            if (msgTypeField != null) {
+                                msg_t = ((org.apache.avro.util.Utf8) record.value().get(msgTypeField.pos())).toString().trim();
+                            }
+
+                            // filter by symbol or msgType; if both are specified, then AND the two.
+                            // note TOTALVIEW, NLSUTP (others) often just reference previous orders by orderId or matchId,
+                            // so those messages will me missing symbol fields.
+                            if ((symbols == null || symbolSet.contains(sym)) && (msgTypes == null || msgTypeSet.contains(msg_t))) {
+                                System.out.println(record.value().toString());
+                            }
+
+                            consumer.commitAsync();
+                        }
+                    }
+                } catch (WakeupException e) {
+                    // ignore for shutdown
+                    System.out.println("Error in cont stream");
+                } finally {
+                    consumer.close();
+                }
+            }
             else {
                 //No valid option provided
                 printHelpMessage();
@@ -345,16 +419,19 @@ public class NCDSSession {
                               "        * GETMSG - Get one example message for the\n"+
                               "        * INSTALLCERTS - Install certificate to keystore\n"+
                               "        * CONTSTREAM   - Retrieve continuous stream  \n"+
+                              "        * FILTERSTREAM  - Retrieve continuous stream filtered by symbols and/or msgtypes \n"+
                               "        * NEWS - Retrieve news stream               \n"+
                 "        * HELP - help \n"+
-                            "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM and NEWS  \n"+
+                            "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM,FILTERSTREAM and NEWS  \n"+
+                            "-symbols -- Provide symbols comma separated list    --- OPTIONAL for FILTERSTREAM  \n"+
+                            "-msgtypes -- Provide msgtypes comma separated list  --- OPTIONAL for FILTERSTREAM  \n"+
                             "-authprops -- Provide Client Properties File path   --- For using different set of Client Authentication Properties \n"+
                             "-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
                             "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
                             "-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
                             "-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS \n"+
                             "-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"+
-                            "-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP and CONTSTREAM \n"
+                            "-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP, CONTSTREAM and FILTERSTREAM \n"
         );
     }
 }

@@ -86,24 +86,28 @@ javax.net.ssl.trustStoreType=PKCS12
   Run `mvn clean install` command in ncdssdk-client project (https://github.com/Nasdaq/CloudDataService/tree/master/ncdssdk-client). It will generate the jar file in target file.
   How to run the jar:
 ```
--opt -- Provide the operation you want to perform \n" +
-  "        * TOP - View the top nnn records in the Topic/Stream\n"+
-  "        * SCHEMA - Display the Schema for the topic\n"+
-  "        * METRICS - Display the Metrics for the topic\n"+
-  "        * TOPICS - List the eligible topics for the client\n"+
-  "        * GETMSG - Get one example message for the\n"+
-  "        * INSTALLCERTS - Install certificate to keystore\n"+
-  "        * CONTSTREAM   - Retrieve continuous stream  \n"+
-  "        * NEWS - Get stream for Pro Global news stream\n"+
-  "        * HELP - help \n"+
-"-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM and NEWS \n"+
-"-authprops -- Provide Client Properties File path     --- For using different set of Client Authentication Properties \n"+
-"-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
-"-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
-"-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
-"-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS \n"+
-"-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"+
-"-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP and CONTSTREAM \n"
+us17mac00278:wsbin thopoi$ ./run.sh -h
+-opt -- Provide the operation you want to perform 
+        * TOP - View the top nnn records in the Topic/Stream
+        * SCHEMA - Display the Schema for the topic
+        * METRICS - Display the Metrics for the topic
+        * TOPICS - List the eligible topics for the client
+        * GETMSG - Get one example message for the
+        * INSTALLCERTS - Install certificate to keystore
+        * CONTSTREAM   - Retrieve continuous stream  
+        * FILTERSTREAM  - Retrieve continuous stream filtered by symbols and/or msgtypes 
+        * NEWS - Retrieve news stream               
+        * HELP - help 
+-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM,FILTERSTREAM and NEWS  
+-symbols -- Provide symbols comma separated list    --- OPTIONAL for FILTERSTREAM  
+-msgtypes -- Provide msgtypes comma separated list  --- OPTIONAL for FILTERSTREAM  
+-authprops -- Provide Client Properties File path   --- For using different set of Client Authentication Properties 
+-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties 
+-n -- Provide number of messages to retrieve        --- REQUIRED for TOP 
+-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG 
+-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS 
+-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS 
+-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP, CONTSTREAM and FILTERSTREAM 
 ```
  
   Few examples to use jar:
