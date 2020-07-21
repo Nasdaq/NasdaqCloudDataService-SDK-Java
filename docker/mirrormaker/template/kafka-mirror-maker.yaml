@@ -32,3 +32,9 @@ spec:
   #        password: password
 
   whitelist: *
+  readinessProbe: 
+    initialDelaySeconds: 15
+    timeoutSeconds: 5
+  livenessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 5
