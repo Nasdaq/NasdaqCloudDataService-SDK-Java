@@ -12,7 +12,8 @@ This repository provides an SDK for developing applications to access the NCDS A
 - Global Index Data Service (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/GIDS_Cloud.pdf)
 - Nasdaq Data On Demand (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/DOD-SIP-cloud.pdf)
 - Nasdaq Canada Basic (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Nasdaq-Basic-Canada-Cloud-Specification.pdf)
-- Financial News (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)    
+- Financial News (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)
+- Nasdaq Smart Options (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NCDSSmartOptions.pdf)
 
 
 # Table of Contents
