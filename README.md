@@ -92,7 +92,7 @@ javax.net.ssl.trustStoreType=PKCS12
   "        * TOP - View the top nnn records in the Topic/Stream\n"+
   "        * SCHEMA - Display the Schema for the topic\n"+
   "        * METRICS - Display the Metrics for the topic\n"+
-  "        * TOPICS - List the eligible topics for the client\n"+
+  "        * TOPICS - List of streams available on Nasdaq Cloud DataService\n"+
   "        * GETMSG - Get one example message for the\n"+
   "        * INSTALLCERTS - Install certificate to keystore\n"+
   "        * CONTSTREAM   - Retrieve continuous stream  \n"+
@@ -344,7 +344,7 @@ while (true) {
 
 ### Example syntax to run the Client Jar based on this SDK
 
-1. To list the list of topics the client is eligible 
+1. To list of streams available on Nasdaq Cloud DataService
  
  ```java -jar ncdssdk-client.jar -opt TOPICS```
  
