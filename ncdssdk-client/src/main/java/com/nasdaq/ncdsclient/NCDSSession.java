@@ -236,7 +236,7 @@ public class NCDSSession {
                         }
                         for (ConsumerRecord<String, GenericRecord> record : records) {
                             System.out.println("-----------------------------------------------------------------------------------------------");
-                            System.out.println("News :" + News.newsBuilder(record.value()).toString());
+                            System.out.println("News :" + record.value());
                             System.out.println("-----------------------------------------------------------------------------------------------");
                         }
                         ncdsmtNewsKafkaConsumer.commitAsync();
