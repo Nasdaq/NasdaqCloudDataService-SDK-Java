@@ -14,6 +14,7 @@ This repository provides an SDK for developing applications to access the NCDS A
 - Nasdaq Canada Basic (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Nasdaq-Basic-Canada-Cloud-Specification.pdf)
 - Financial News (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)
 - Nasdaq Smart Options (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NCDSSmartOptions.pdf)
+- Nasdaq Fund Network (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NFNDS_NCDS.pdf)
 
 
 # Table of Contents
