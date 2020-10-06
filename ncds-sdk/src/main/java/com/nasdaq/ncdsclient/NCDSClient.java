@@ -10,11 +10,13 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.Metric;
 import org.apache.kafka.common.MetricName;
+import org.apache.kafka.common.TopicPartition;
 
 
 import java.time.Duration;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * This is a client class to access the nasdaq's market data
@@ -191,7 +193,7 @@ public class NCDSClient {
      * @return return the example message
      * @throws Exception Java Exception
      */
-    public String getSampleMessages(String topicName, String messageName) throws Exception {
+    public String getSampleMessages(String topicName, String messageName, boolean allMessages) throws Exception {
         KafkaConsumer kafkaConsumer = null;
         String sampleMsg = null;
         boolean found = false;
@@ -201,11 +203,19 @@ public class NCDSClient {
             while (!found) {
                 Duration mins = Duration.ofMinutes(Integer.parseInt("1"));
                 ConsumerRecords<String, GenericRecord> records = kafkaConsumer.poll(mins);
+                if (records.isEmpty() || endOfData(kafkaConsumer)){
+                    System.out.println("--------------------------------END of Stream------------------");
+                    break;
+                }
                 for (ConsumerRecord<String, GenericRecord> record : records){
                     if(messageName.equals(record.value().getSchema().getName())){
                         sampleMsg = record.value().toString();
-                        found = true;
-                        break;
+                        if (allMessages){
+                            if (sampleMsg!= null) System.out.println(sampleMsg);
+                        }
+                        else{
+                            found = true;
+                        }
                     }
                 }
             }
@@ -230,4 +240,23 @@ public class NCDSClient {
             throw (e);
         }
     }
+
+    private boolean endOfData(KafkaConsumer consumer) {
+        // see if we have a final sequence number for this stream yet
+        // final sequence number is delivered in the StreamCompleted event
+        // which is sent by Soup2Kafka when it's done publishing a stream
+        Set<TopicPartition> topicPartitions = consumer.assignment();
+        Map<TopicPartition, Long> endOffsets = consumer.endOffsets(topicPartitions);
+        for (Map.Entry<TopicPartition, Long> offset : endOffsets.entrySet()) {
+            long position = consumer.position(offset.getKey());
+            if (position != offset.getValue()) {
+                // not at the end of this topic+partition
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 }

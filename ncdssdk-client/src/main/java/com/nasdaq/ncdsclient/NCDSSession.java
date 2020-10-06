@@ -2,6 +2,7 @@ package com.nasdaq.ncdsclient;
 
 import com.nasdaq.ncdsclient.internal.utils.InstallCertificates;
 import com.nasdaq.ncdsclient.news.News;
+import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -15,8 +16,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class NCDSSession {
 
@@ -25,6 +29,8 @@ public class NCDSSession {
         CommandOptions cmd = new CommandOptions(args);
         String testOption = null;
         String topic = null;
+        String symbols = null;
+        String msgTypes = null;
         String messageName = null;
         String keyStorePath = null;
         String keyStorePassword = null;
@@ -79,6 +85,7 @@ public class NCDSSession {
                 topic = cmd.valueOf("-topic");
                 numberOfTopMessage = cmd.valueOf("-n");
                 break;
+            case "GETALLMSGS":
             case "GETMSG":
                 if(!cmd.hasOption("-msgName") || !cmd.hasOption("-topic")){
                     System.out.println("You must provide -topic and -msgName for getting example message");
@@ -116,6 +123,38 @@ public class NCDSSession {
                     }
                 }
                 topic = cmd.valueOf("-topic");
+                break;
+            case "FILTERSTREAM":
+                if(!cmd.hasOption("-topic")){
+                    System.out.println("You must provide -topic");
+                    printHelpMessage();
+                    System.exit(0);
+                    break;
+                }
+                if(cmd.hasOption("-timestamp"))
+                {
+                    try {
+                        timestamp = Long.parseLong(cmd.valueOf("-timestamp"));
+                    } catch (NumberFormatException e){
+                        System.out.println("You must provide timestamp in long format");
+                        System.exit(0);
+                    }
+                }
+                topic = cmd.valueOf("-topic");
+                // optional -symbols and -msgtypes
+                if (cmd.hasOption("-symbols")){
+                symbols = cmd.valueOf("-symbols");
+                }
+                if (cmd.hasOption("-msgtypes")){
+                msgTypes = cmd.valueOf("-msgtypes");
+                }
+                if (symbols== null && msgTypes== null){
+                    System.out.println("You must provide either symbols or msgtypes of filtering");
+                    System.out.println("no symbols parsed in -symbols. Ex: -symbols XXX,YYY,ZZZ");
+                    System.out.println("no messagtypes parsed in -msgtypes. Ex: -msgtypes A,B,C");
+                    printHelpMessage();
+                    System.exit(0);
+                }
                 break;
             case "NEWS":
                 if(!cmd.hasOption("-topic")){
@@ -197,13 +236,22 @@ public class NCDSSession {
                     System.out.println("Need to get run GETMSG with `earliest` offset");
                     System.exit(0);
                 }
-                String msg = ncdsClient.getSampleMessages(topic, messageName);
+                String msg = ncdsClient.getSampleMessages(topic, messageName, false);
                 if (msg != null) {
                     System.out.println(msg);
                 }
                 else {
                     System.out.println(" Message Not Found ... ");
                 }
+            }
+            else if (testOption.equals("GETALLMSGS")){
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
+                System.out.println("Finding the messages");
+                if (kafkaConfig.containsKey("auto.offset.reset") && kafkaConfig.getProperty("auto.offset.reset").equals("latest")){
+                    System.out.println("Need to get run GETMSG with `earliest` offset");
+                    System.exit(0);
+                }
+                ncdsClient.getSampleMessages(topic, messageName, true);
             }
             else if (testOption.equals("INSTALLCERTS")){
                 try
@@ -269,6 +317,58 @@ public class NCDSSession {
                             System.out.println("value :" + record.value().toString());
                         }
                         consumer.commitAsync();
+                    }
+                } catch (WakeupException e) {
+                    // ignore for shutdown
+                    System.out.println("Error in cont stream");
+                } finally {
+                    consumer.close();
+                }
+            }
+            else if( testOption.equals("FILTERSTREAM")){
+                Set<String> symbolSet = null;
+                Set<String> msgTypeSet = null;
+
+                if (symbols != null) {
+                    symbolSet = Arrays.stream(symbols.split(",")).map(String::trim).collect(Collectors.toSet());
+                }
+                if (msgTypes != null) {
+                    msgTypeSet = Arrays.stream(msgTypes.split(",")).map(String::trim).collect(Collectors.toSet());
+                }
+                ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
+                Consumer consumer;
+                if (timestamp == null){
+                    consumer = ncdsClient.NCDSKafkaConsumer(topic);
+                }
+                else {
+                    consumer = ncdsClient.NCDSKafkaConsumer(topic, timestamp);
+                }
+                try {
+                    while (true) {
+                        //ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofMinutes(Integer.parseInt("1")));
+                        ConsumerRecords<String, GenericRecord> records = consumer.poll(Long.MAX_VALUE);
+                        if (records.count() == 0) {
+                            System.out.println("No Records Found for the Topic:" + topic);
+                        }
+                        for (ConsumerRecord<String, GenericRecord> record : records) {
+
+                            Schema.Field symbolField = record.value().getSchema().getField("symbol");
+                            String msgType = record.value().getSchema().getName();
+                            String sym = null;
+                            String msg_t = null;
+                            if (symbolField != null) {
+                                sym = ((org.apache.avro.util.Utf8) record.value().get(symbolField.pos())).toString().trim();
+                            }
+                            if (msgType != null && !msgType.equals("")) {
+                                msg_t = msgType.trim();
+                            }
+
+                            if ((symbols == null || symbolSet.contains(sym)) && (msgTypes == null || msgTypeSet.contains(msg_t))) {
+                                System.out.println(record.value().toString());
+                            }
+
+                            consumer.commitAsync();
+                        }
                     }
                 } catch (WakeupException e) {
                     // ignore for shutdown
@@ -345,16 +445,19 @@ public class NCDSSession {
                               "        * GETMSG - Get one example message for the\n"+
                               "        * INSTALLCERTS - Install certificate to keystore\n"+
                               "        * CONTSTREAM   - Retrieve continuous stream  \n"+
+                              "        * FILTERSTREAM  - Retrieve continuous stream filtered by symbols and/or msgtypes \n"+
                               "        * NEWS - Retrieve news stream               \n"+
                 "        * HELP - help \n"+
-                            "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM and NEWS  \n"+
+                            "-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM,FILTERSTREAM and NEWS  \n"+
+                            "-symbols -- Provide symbols comma separated list    --- OPTIONAL for FILTERSTREAM  \n"+
+                            "-msgtypes -- Provide msgtypes comma separated list  --- OPTIONAL for FILTERSTREAM  \n"+
                             "-authprops -- Provide Client Properties File path   --- For using different set of Client Authentication Properties \n"+
                             "-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
                             "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
                             "-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
                             "-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS \n"+
                             "-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"+
-                            "-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP and CONTSTREAM \n"
+                            "-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP and CONTSTREAM and FILTERSTREAM\n"
         );
     }
 }

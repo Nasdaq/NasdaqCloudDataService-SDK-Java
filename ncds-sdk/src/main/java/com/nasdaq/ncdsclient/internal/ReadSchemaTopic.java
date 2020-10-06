@@ -35,32 +35,34 @@ public class ReadSchemaTopic {
     public Schema readSchema(String topic) throws Exception {
         KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
         schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
-        //Duration mins = Duration.ofMinutes(5);
-        ConsumerRecords<String,GenericRecord> schemaRecords= schemaConsumer.poll(Long.MAX_VALUE);
+        Duration sec = Duration.ofSeconds(5);
         Schema messageSchema = null;
         ConsumerRecord<String,GenericRecord> lastRecord=null;
 
-
-        Iterator<ConsumerRecord<String, GenericRecord>> recordsIterator = schemaRecords.iterator();
-
-        while (recordsIterator.hasNext()){
-            ConsumerRecord<String, GenericRecord> record = recordsIterator.next();
-            try {
-                Schema schema = record.value().getSchema();
-                List<Schema.Field> fldList = schema.getFields();
-                boolean nameFound = false;
-                for (int i = 0; i < fldList.size(); i++) {
-                    if (fldList.get(i).name().equals("name")) {
-                        nameFound = true;
-                        break;
-                    }
-                }
-                if (nameFound && (record.value().get("name").toString().equals(topic))) {
-                    lastRecord = record;
-                }
+        while (true) {
+            ConsumerRecords<String, GenericRecord> schemaRecords = schemaConsumer.poll(sec);
+            if(schemaRecords.isEmpty()){
+                break;
             }
-            catch (Exception e){
-               throw e;
+            Iterator<ConsumerRecord<String, GenericRecord>> recordsIterator = schemaRecords.iterator();
+            while (recordsIterator.hasNext()) {
+                ConsumerRecord<String, GenericRecord> record = recordsIterator.next();
+                try {
+                    Schema schema = record.value().getSchema();
+                    List<Schema.Field> fldList = schema.getFields();
+                    boolean nameFound = false;
+                    for (int i = 0; i < fldList.size(); i++) {
+                        if (fldList.get(i).name().equals("name")) {
+                            nameFound = true;
+                            break;
+                        }
+                    }
+                    if (nameFound && (record.value().get("name").toString().equals(topic))) {
+                        lastRecord = record;
+                    }
+                } catch (Exception e) {
+                    throw e;
+                }
             }
         }
         if (lastRecord != null) {
@@ -91,26 +93,30 @@ public class ReadSchemaTopic {
 
         KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
         schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
-        Duration mins = Duration.ofMinutes(1);
-        ConsumerRecords<String,GenericRecord> schemaRecords= schemaConsumer.poll(mins.toMillis());
-
-        Iterator<ConsumerRecord<String, GenericRecord>> recordsIterator = schemaRecords.iterator();
-
-        while (recordsIterator.hasNext()){
-            ConsumerRecord<String, GenericRecord> record = recordsIterator.next();
-            try {
-                Schema schema = record.value().getSchema();
-                List<Schema.Field> fldList = schema.getFields();
-                for (int i = 0; i < fldList.size(); i++) {
-                    if (fldList.get(i).name().equals("name")) {
-                        topics.add((record.value().get("name").toString()));
+        Duration sec = Duration.ofSeconds(5);
+        while (true) {
+            ConsumerRecords<String, GenericRecord> schemaRecords = schemaConsumer.poll(sec);
+            if(schemaRecords.isEmpty()){
+                break;
+            }
+            Iterator<ConsumerRecord<String, GenericRecord>> recordsIterator = schemaRecords.iterator();
+            while (recordsIterator.hasNext()) {
+                ConsumerRecord<String, GenericRecord> record = recordsIterator.next();
+                try {
+                    Schema schema = record.value().getSchema();
+                    List<Schema.Field> fldList = schema.getFields();
+                    for (int i = 0; i < fldList.size(); i++) {
+                        if (fldList.get(i).name().equals("name")) {
+                            topics.add((record.value().get("name").toString()));
+                        }
                     }
+                } catch (Exception e) {
+                    //throw e;
+                    break;
                 }
             }
-            catch (Exception e){
-                throw e;
-            }
         }
+        schemaConsumer.close();
         return topics ;
     }
 
@@ -133,7 +139,7 @@ public class ReadSchemaTopic {
             kafkaProps.put("value.deserializer", AvroDeserializer.class.getName());
             kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
             kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, cleindId + "_" + UUID.randomUUID().toString());
-            kafkaProps.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "2048576");
+            kafkaProps.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "5048576");
             ConfigProperties.resolve(kafkaProps);
         }
         catch (Exception e) {
