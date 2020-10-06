@@ -12,9 +12,9 @@ This repository provides an SDK for developing applications to access the NCDS A
 - Global Index Data Service (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/GIDS_Cloud.pdf)
 - Nasdaq Data On Demand (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/DOD-SIP-cloud.pdf)
 - Nasdaq Canada Basic (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Nasdaq-Basic-Canada-Cloud-Specification.pdf)
-- Financial News (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)
-- Nasdaq Smart Options (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NCDSSmartOptions.pdf)
-- Nasdaq Fund Network (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NFNDS_NCDS.pdf)
+- Financial News (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)  
+- Nasdaq Smart Options (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NCDSSmartOptions.pdf) 
+- Nasdaq Fund Network (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NFNDS_NCDS.pdf) 
 
 
 # Table of Contents
@@ -97,16 +97,19 @@ javax.net.ssl.trustStoreType=PKCS12
   "        * GETMSG - Get one example message for the\n"+
   "        * INSTALLCERTS - Install certificate to keystore\n"+
   "        * CONTSTREAM   - Retrieve continuous stream  \n"+
+  "        * FILTERSTREAM  - Retrieve continuous stream filtered by symbols and/or msgtypes \n"+
   "        * NEWS - Get stream for Pro Global news stream\n"+
   "        * HELP - help \n"+
-"-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM and NEWS \n"+
-"-authprops -- Provide Client Properties File path     --- For using different set of Client Authentication Properties \n"+
+"-topic -- Provide topic for selected option         --- REQUIRED for TOP,SCHEMA,METRICS,GETMSG,CONTSTREAM,FILTERSTREAM  and NEWS \n"+
+"-symbols -- Provide symbols comma separated list    --- OPTIONAL for FILTERSTREAM"+  
+"-msgtypes -- Provide msgtypes comma separated list  --- OPTIONAL for FILTERSTREAM"+  
+"-authprops -- Provide Client Properties File path   --- For using different set of Client Authentication Properties \n"+
 "-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
 "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
 "-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
 "-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS \n"+
 "-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"+
-"-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP and CONTSTREAM \n"
+"-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP, CONTSTREAM and FILTERSTREAM\n"
 ```
  
   Few examples to use jar:
