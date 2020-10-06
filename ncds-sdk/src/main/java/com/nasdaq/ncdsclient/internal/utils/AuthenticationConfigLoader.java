@@ -61,6 +61,7 @@ public class AuthenticationConfigLoader {
 
     public static boolean validateSecurityConfig(Properties cfg) throws Exception {
 
+        addNasdaqSpecificAuthProperties(cfg);
         if (cfg.getProperty(OAUTH_TOKEN_ENDPOINT_URI) == null) {
           throw new Exception ("Authentication Setting :" + OAUTH_TOKEN_ENDPOINT_URI  + " Missing" );
         }
@@ -84,5 +85,12 @@ public class AuthenticationConfigLoader {
         }
 
         return true;
+    }
+
+    private static Properties addNasdaqSpecificAuthProperties(Properties p){
+        if(!IsItJunit.isJUnitTest()) {
+            p.setProperty("oauth.username.claim","preferred_username");
+        }
+        return p;
     }
 }
