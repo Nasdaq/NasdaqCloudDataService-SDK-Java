@@ -384,6 +384,14 @@ while (true) {
 
   ```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -timestamp 1590084445610 ```
 
+10. To get filtered stream by symbols or/and message-types
+
+  ```java -jar ncdssdk-client.jar -opt FILTERSTREAM -topic NLSUTP -symbols AAPL,NDAQ -msgtypes SeqTradeReportMessage```
+
+11. To get all messages for given type messagtype
+
+  ```java -jar ncdssdk-client.jar -opt GETALLMSGS -topic NLSUTP -msgName SeqTradeReportMessage```
+
  
 
 ## Documentation 
