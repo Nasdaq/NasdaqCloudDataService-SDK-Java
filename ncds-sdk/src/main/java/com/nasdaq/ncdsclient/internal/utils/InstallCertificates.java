@@ -129,7 +129,7 @@ public class InstallCertificates {
         con.connect();
         Certificate[] certs = con.getServerCertificates();
         for(Certificate cert : certs){
-            if(((X509CertImpl) cert).getSubjectDN().getName().contains("keycloak")){
+            if(((X509CertImpl) cert).getSubjectDN().getName().contains("GlobalSign Atlas R3 DV TLS")){
                 return cert;
             }
         }
