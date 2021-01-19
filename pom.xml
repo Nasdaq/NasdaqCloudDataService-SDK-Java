@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.nasdaq.ncds</groupId>
     <artifactId>ncds</artifactId>
-    <version>0.0.2</version>
+    <version>0.3.0</version>
     <packaging>pom</packaging>
     <name>Nasdaq Cloud Data Service </name>
 
@@ -16,9 +16,7 @@
 
     <properties>
         <avro.version>1.8.2</avro.version>
-        <kafka.version>2.0.1</kafka.version>
-        <kafka.version-client>2.0.1</kafka.version-client>
-        <confluent.version>5.2.2</confluent.version>
+        <kafka.version>2.6.0</kafka.version>
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
@@ -35,12 +33,6 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
-            <version>${kafka.version-client}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-streams</artifactId>
             <version>${kafka.version}</version>
         </dependency>
 
@@ -48,24 +40,14 @@
         <dependency>
             <groupId>io.strimzi</groupId>
             <artifactId>kafka-oauth-client</artifactId>
-            <version>0.1.0</version>
+            <version>0.6.0</version>
         </dependency>
 
-        <!-- SFLG Logging -->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-simple</artifactId>-->
-<!--            <version>1.7.21</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-api</artifactId>-->
-<!--            <version>1.7.6</version>-->
-<!--        </dependency>-->
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.5</version>
+            <version>1.7.30</version>
         </dependency>
 
     </dependencies>

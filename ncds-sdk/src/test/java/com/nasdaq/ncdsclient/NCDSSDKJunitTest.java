@@ -1,17 +1,15 @@
 package com.nasdaq.ncdsclient;
 
-import junit.framework.Assert;
 import com.nasdaq.ncdsclient.utils.NCDSTestUtil;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.junit.jupiter.api.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class NCDSSDKJunitTest {
@@ -23,16 +21,16 @@ class NCDSSDKJunitTest {
             ncdsTestUtil = new NCDSTestUtil();
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(0);
         }
     }
 
-
     @Test
     @Order(1)
-    void testNCDSClient() {
+    public void testNCDSClient() {
         try {
             NCDSClient ncdsClient = new NCDSClient(null, null);
-            Assertions.assertNotNull(ncdsClient);
+            assertNotNull(ncdsClient);
         } catch (Exception e){
             new AssertionError("Error");
             System.out.println(e.getMessage());
@@ -42,16 +40,16 @@ class NCDSSDKJunitTest {
 
     @Test
     @Order(2)
-    void testListTopicsForTheClient() {
+    public void testListTopicsForTheClient() {
         try {
             NCDSClient ncdsClient = new NCDSClient(null, null);
             String[] topics = ncdsClient.ListTopicsForTheClient();
             Collections.sort(Arrays.asList(topics));
             String[] addedTopics = ncdsTestUtil.getAddedTopics();
             Collections.sort(Arrays.asList(addedTopics));
-            Assert.assertEquals(Arrays.asList(topics),Arrays.asList(addedTopics));
+            assertEquals(Arrays.asList(topics),Arrays.asList(addedTopics));
         } catch (Exception e) {
-            Assert.fail();
+            Assertions.fail();
             System.out.println(e.getMessage());
         }
     }
@@ -59,7 +57,7 @@ class NCDSSDKJunitTest {
 
     @Test
     @Order(3)
-    void testgetSchemaForTheTopic(){
+    public void testgetSchemaForTheTopic(){
         try {
             NCDSClient ncdsClient = new NCDSClient(null, null);
             String topic = "GIDS";
@@ -67,16 +65,16 @@ class NCDSSDKJunitTest {
             String schemaFile = "testGIDS.avsc";
             String schemaFromFile = ncdsTestUtil.getSchemaForTopic(schemaFile);
 
-            Assert.assertEquals(schemaFromSDK,schemaFromFile);
+            assertEquals(schemaFromSDK,schemaFromFile);
         } catch (Exception e) {
-            Assert.fail();
+            Assertions.fail();
             System.out.println(e.getMessage());
         }
     }
 
     @Test
     @Order(4)
-    void testInsertion(){
+    public void testInsertion(){
         ArrayList<GenericRecord> mockRecords = ncdsTestUtil.getMockMessages();
         ArrayList<GenericRecord> mockRecordsFromKafka = new ArrayList<>();
 
@@ -90,9 +88,9 @@ class NCDSSDKJunitTest {
                 mockRecordsFromKafka.add(iteratorMocker.next().value());
             }
             //mockRecordsFromKafka.remove(0);
-            Assert.assertEquals(mockRecords,mockRecordsFromKafka);
+            assertEquals(mockRecords,mockRecordsFromKafka);
         } catch (Exception e) {
-            Assert.fail();
+            Assertions.fail();
             e.printStackTrace();
         }
     }
