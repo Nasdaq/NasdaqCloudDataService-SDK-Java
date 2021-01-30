@@ -2,8 +2,10 @@ package com.nasdaq.ncdsclient.utils;
 
 import com.nasdaq.ncdsclient.core.GenericRecordSerializer;
 import com.nasdaq.ncdsclient.core.KafkaControlSchema;
-import com.nasdaq.ncdsclient.core.KafkaTestServer;
-import com.nasdaq.ncdsclient.core.KafkaTestUtils;
+import com.salesforce.kafka.test.KafkaTestServer;
+import com.salesforce.kafka.test.KafkaTestUtils;
+import com.salesforce.kafka.test.listeners.BrokerListener;
+import com.salesforce.kafka.test.listeners.PlainListener;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
@@ -63,7 +65,9 @@ public class NCDSTestUtil {
     }
 
     private void beforeEachTest() throws Exception {
-        kafkaTestServer = new KafkaTestServer(getDefaultBrokerOverrideProperties());
+        final List<BrokerListener> brokerListeners = new ArrayList<>();
+        brokerListeners.add(new PlainListenerSpecificPort());
+        kafkaTestServer = new KafkaTestServer(getDefaultBrokerOverrideProperties(), brokerListeners);
         kafkaTestServer.start();
     }
 
@@ -144,6 +148,7 @@ public class NCDSTestUtil {
                 while (!future.isDone()) {
                     Thread.sleep(500L);
                 }
+                producer.close();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -192,6 +197,7 @@ public class NCDSTestUtil {
                 while (!future.isDone()) {
                     Thread.sleep(500L);
                 }
+                mockerProducer.close();
             }
 
         }catch (Exception e){

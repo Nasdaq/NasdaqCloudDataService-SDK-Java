@@ -17,6 +17,8 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.nasdaq.ncdsclient.internal.utils.AuthenticationConfigLoader.getClientID;
@@ -151,7 +153,7 @@ public class NasdaqKafkaAvroConsumer {
             if(!kafkaProps.containsKey(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)) {
                 kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
             }
-            kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" + UUID.randomUUID().toString());
+            kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" +getDate() + "_" + UUID.randomUUID().toString());
             ConfigProperties.resolve(kafkaProps);
             return new KafkaAvroConsumer(kafkaProps, avroSchema);
         }
@@ -210,5 +212,13 @@ public class NasdaqKafkaAvroConsumer {
         catch (Exception e){
             throw (e);
         }
+    }
+
+    private String getDate(){
+        // Get Today's EST date
+        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+        dateformat.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+        String date = dateformat.format(new Date());
+        return date;
     }
 }

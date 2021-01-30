@@ -3,7 +3,7 @@ kind: KafkaMirrorMaker
 metadata:
   name: my-mirror-maker
 spec:
-  version: 2.3.0
+  version: 2.6.0
   replicas: 1
   consumer:
     bootstrapServers: clouddataservice.broker.bootstrap.nasdaq.com:9094

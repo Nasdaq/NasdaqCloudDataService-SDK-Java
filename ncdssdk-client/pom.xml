@@ -7,11 +7,10 @@
     <parent>
         <groupId>com.nasdaq.ncds</groupId>
         <artifactId>ncds</artifactId>
-        <version>0.0.2</version>
+        <version>0.3.0</version>
     </parent>
 
     <artifactId>ncdssdk-client</artifactId>
-    <version>0.0.2</version>
 
     <name>Client</name>
     <description>Provide example client to interact with data</description>
@@ -20,7 +19,7 @@
         <dependency>
             <groupId>com.nasdaq.ncds</groupId>
             <artifactId>ncds-sdk</artifactId>
-            <version>0.0.2</version>
+            <version>0.3.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
