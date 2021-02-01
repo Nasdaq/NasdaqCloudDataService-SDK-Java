@@ -4,6 +4,9 @@ This tool uses a Kafka consumer to consume messages from the source cluster, and
 ## Running Mirror Maker on docker
 This example shows how to setup standalone Mirror Maker instance application. 
 
+#### Consumer Configuration (NCDS cluster)
+- Replace example `bootstrap.servers` property in the file kafka.properties (https://github.com/Nasdaq/CloudDataService/blob/master/docker/mirrormaker/consumer.properties) with provided values during on-boarding. 
+
 #### Producer Configuration (Target Cluster)
 - The producer is the part of Mirror Maker that uses the data read by the and replicates it to the destination cluster.
 - Update the producer.properties based target cluster. (https://github.com/Nasdaq/CloudDataService/tree/master/docker/mirrormaker/producer.properties)

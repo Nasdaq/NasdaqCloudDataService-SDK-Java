@@ -6,7 +6,7 @@ spec:
   version: 2.6.0
   replicas: 1
   consumer:
-    bootstrapServers: clouddataservice.broker.bootstrap.nasdaq.com:9094
+    bootstrapServers: {streams_endpoint_url}:9094
     groupId: my-source-group-id
     config:
       auto.offset.reset: earliest
@@ -21,7 +21,7 @@ spec:
         key: secret
         secretName: clientsecret
       disableTlsHostnameVerification: false
-      tokenEndpointUri: https://clouddataservice.auth.nasdaq.com/auth/realms/pro-realm/protocol/openid-connect/token
+      tokenEndpointUri: https://{auth_endpoint_url}/auth/realms/demo/protocol/openid-connect/token
   producer:
     bootstrapServers: kafka-cluster-kafka-bootstrap.localkafka:9092
   #    authentication:
