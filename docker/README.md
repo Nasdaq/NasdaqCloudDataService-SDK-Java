@@ -1,5 +1,10 @@
 # Nasdaq Cloud Data Service (NCDS) Dockerfiles
 
+## Update properties file
+Replace example `bootstrap.servers` property in the file kafka.properties (https://github.com/Nasdaq/CloudDataService/blob/master/docker/kafka.properties) with provided values during on-boarding.
+
+Replace example `oauth.token.endpoint.uri` property in the file auth.properties (https://github.com/Nasdaq/CloudDataService/blob/master/docker/auth.properties) with provided values during on-boarding.
+
 ## Building
 Run docker build in project home directory 
     
