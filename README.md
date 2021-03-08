@@ -55,7 +55,7 @@ For example:
  Required kafka configuration 
     
 ```properties
-bootstrap.servers={streams_endpoint_url}:9094 #without the protocol 
+bootstrap.servers={streams_endpoint_url}:9094
 ```
     
   For optional consumer configurations see: https://kafka.apache.org/0100/javadoc/org/apache/kafka/clients/consumer/ConsumerConfig.html
