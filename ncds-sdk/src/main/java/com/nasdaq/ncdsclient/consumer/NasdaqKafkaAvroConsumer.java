@@ -10,7 +10,6 @@ import com.nasdaq.ncdsclient.news.NewsUtil;
 import io.strimzi.kafka.oauth.common.ConfigProperties;
 import org.apache.avro.Schema;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
 import org.apache.kafka.common.TopicPartition;
@@ -110,22 +109,16 @@ public class NasdaqKafkaAvroConsumer {
             }
             kafkaConsumer = getConsumer(kafkaSchema);
 
-            kafkaConsumer.subscribe(Collections.singletonList(streamName + ".stream"), new ConsumerRebalanceListener() {
-                @Override
-                public void onPartitionsRevoked(Collection<TopicPartition> collection) {
+            // seek the consumer offset to a specific timestamp
+            Map<TopicPartition,Long> timestmaps = new HashMap();
+            TopicPartition topicPartition = new TopicPartition(streamName + ".stream",0);
+            timestmaps.put(topicPartition , timestamp);
+            Map<TopicPartition, OffsetAndTimestamp> offsetsForTimes = kafkaConsumer.offsetsForTimes(timestmaps);
+            System.out.println("Offset: "+ offsetsForTimes.get(topicPartition).offset());
+            kafkaConsumer.seek(topicPartition, offsetsForTimes.get(topicPartition).offset());
 
-                }
+            kafkaConsumer.subscribe(Collections.singletonList(streamName + ".stream"));
 
-                @Override
-                public void onPartitionsAssigned(Collection<TopicPartition> collection) {
-                    Map<TopicPartition,Long> timestmaps = new HashMap();
-                    TopicPartition topicPartition = new TopicPartition(streamName + ".stream",0);
-                    timestmaps.put(topicPartition , timestamp);
-                    Map<TopicPartition, OffsetAndTimestamp> offsetsForTimes = kafkaConsumer.offsetsForTimes(timestmaps);
-                    System.out.println("Offset: "+ offsetsForTimes.get(topicPartition).offset());
-                    kafkaConsumer.seek(topicPartition, offsetsForTimes.get(topicPartition).offset());
-                }
-            });
             return kafkaConsumer;
         }
         catch (Exception e){
@@ -133,7 +126,7 @@ public class NasdaqKafkaAvroConsumer {
         }
     }
 
-    /**`
+    /**
      *
      * @param avroSchema - Schema for the topic
      * @return KafkaConsumer
