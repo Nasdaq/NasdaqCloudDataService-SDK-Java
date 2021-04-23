@@ -35,7 +35,7 @@ public class ReadSchemaTopic {
     public Schema readSchema(String topic) throws Exception {
         KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
         schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
-        Duration sec = Duration.ofSeconds(5);
+        Duration sec = Duration.ofSeconds(10);
         Schema messageSchema = null;
         ConsumerRecord<String,GenericRecord> lastRecord=null;
 
@@ -93,7 +93,7 @@ public class ReadSchemaTopic {
 
         KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
         schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
-        Duration sec = Duration.ofSeconds(5);
+        Duration sec = Duration.ofSeconds(10);
         while (true) {
             ConsumerRecords<String, GenericRecord> schemaRecords = schemaConsumer.poll(sec);
             if(schemaRecords.isEmpty()){

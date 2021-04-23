@@ -8,7 +8,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.bouncycastle.asn1.x509.*;
 import org.json.JSONObject;
+import sun.security.x509.URIName;
 import sun.security.x509.X509CertImpl;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,6 +19,8 @@ import java.net.URL;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.List;
 
 
 public class InstallCertificates {
@@ -123,14 +127,26 @@ public class InstallCertificates {
 
     }
 
-    private Certificate getAuthCertificate() throws IOException {
+    private Certificate getAuthCertificate() throws Exception {
         URL url = new URL(null, authUrl, new sun.net.www.protocol.https.Handler());
         HttpsURLConnection con = (HttpsURLConnection)url.openConnection();
         con.connect();
         Certificate[] certs = con.getServerCertificates();
-        for(Certificate cert : certs){
-            if(((X509CertImpl) cert).getSubjectDN().getName().contains("keycloak")){
-                return cert;
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        for(Certificate cert : certs) {
+            List<sun.security.x509.AccessDescription> descriptions = ((X509CertImpl) cert).getAuthorityInfoAccessExtension().getAccessDescriptions();
+            for (sun.security.x509.AccessDescription ad : descriptions) {
+                // check if it's a URL to issuer's certificate
+                if (ad.getAccessMethod().toString().equals(X509ObjectIdentifiers.id_ad_caIssuers.toString())) {
+                    sun.security.x509.GeneralName location = ad.getAccessLocation();
+                    if (location.getType() == GeneralName.uniformResourceIdentifier) {
+                        // Get issuer's URL
+                        String issuerUrl = ((URIName) location.getName()).getURI().toString();
+                        URL url1 = new URL(issuerUrl);
+                        X509Certificate issuer = (X509Certificate) certificateFactory.generateCertificate(url1.openStream());
+                        return issuer;
+                    }
+                }
             }
         }
         return null;

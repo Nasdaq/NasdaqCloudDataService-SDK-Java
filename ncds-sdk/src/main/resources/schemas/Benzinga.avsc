@@ -1,0 +1,72 @@
+[ {
+    "name" : "Benzinga",
+    "type" : "record",
+    "namespace": "com.nasdaq.ncds.benzinga",
+    "fields": [ {
+        "name" : "event",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "id",
+        "type" : "int",
+        "default" : 0
+    }, {
+        "name" : "content_id",
+        "type" : "int",
+        "default" : 0
+    }, {
+        "name" : "version_id",
+        "type" : "int",
+        "default" : 0
+    }, {
+        "name" : "type",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "created_at",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "updated_at",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "title",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "body",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "author",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "teaser_text",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "canonical_path",
+        "type" : "string",
+        "default" : "null"
+    },{
+        "name" : "tags",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "tickers",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "channels",
+        "type" : "string",
+        "default" : "null"
+    }, {
+        "name" : "timestamp",
+        "type" : "string",
+        "default" : "null"
+    }],
+    "version" : "1"
+    }
+, "null"]

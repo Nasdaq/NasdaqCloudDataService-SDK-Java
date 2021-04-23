@@ -4,18 +4,31 @@ Nasdaq Cloud Data Service (NCDS) provides a modern and efficient method of deliv
 
 This repository provides an SDK for developing applications to access the NCDS API. While the SDK is open source, connecting to the API does require credentials, which are provided by Nasdaq during an on-boarding process.
 
+
 # Products Currently Available
-
-- Nasdaq Basic (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NasdaqBasic-Cloud.pdf)
-- Nasdaq Last Sale+ (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NLSPlus-cloud.pdf) 
-- Nasdaq TotalView (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Totalview-ITCH-cloud.pdf)
-- Global Index Data Service (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/GIDS_Cloud.pdf)
-- Nasdaq Data On Demand (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/DOD-SIP-cloud.pdf)
-- Nasdaq Canada Basic (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Nasdaq-Basic-Canada-Cloud-Specification.pdf)
-- Financial News (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)  
-- Nasdaq Smart Options (http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NCDSSmartOptions.pdf) 
-- Nasdaq Fund Network (http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NFNDS_NCDS.pdf) 
-
+### Equities
+#### The Nasdaq Stock Market
+- [Nasdaq Basic](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NasdaqBasic-Cloud.pdf)
+- [Nasdaq Last Sale+](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NLSPlus-cloud.pdf) 
+- [Nasdaq TotalView](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Totalview-ITCH-cloud.pdf)
+- [Nasdaq Consolidated Quotes and Trades](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/CQT-cloud.pdf)
+#### Nasdaq BX
+- [BX BBO](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/BX_BBO_Cloud.pdf)
+- [BX Last Sale](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/BLS_Cloud.pdf)
+#### Nasdaq PSX
+- [PSX BBO](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/PSX_BBO_Cloud.pdf)
+- [PSX Last Sale](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/PLS_Cloud.pdf)
+#### Nasdaq Canada
+- [Nasdaq Canada Basic](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Nasdaq-Basic-Canada-Cloud-Specification.pdf)
+### Indexes
+- [Global Index Data Service](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/GIDS_Cloud.pdf)
+### Options
+#### Nasdaq U.S. Derivatives
+- [Nasdaq Smart Options](http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NCDSSmartOptions.pdf) 
+### Mutual Funds
+- [Nasdaq Fund Network](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NFNDS_NCDS.pdf) 
+### News
+- [Financial News](http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)  
 
 # Table of Contents
  - [Getting Started](#Getting-Started)
@@ -54,7 +67,7 @@ For example:
  Required kafka configuration 
     
 ```properties
-bootstrap.servers={streams_endpoint_url}:9094 #without the protocol 
+bootstrap.servers={streams_endpoint_url}:9094
 ```
     
   For optional consumer configurations see: https://kafka.apache.org/0100/javadoc/org/apache/kafka/clients/consumer/ConsumerConfig.html
