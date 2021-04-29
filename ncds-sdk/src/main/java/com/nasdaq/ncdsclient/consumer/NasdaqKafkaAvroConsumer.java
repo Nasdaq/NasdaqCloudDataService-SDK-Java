@@ -9,12 +9,9 @@ import com.nasdaq.ncdsclient.internal.utils.KafkaConfigLoader;
 import com.nasdaq.ncdsclient.news.NewsUtil;
 import io.strimzi.kafka.oauth.common.ConfigProperties;
 import org.apache.avro.Schema;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
-
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -108,16 +105,14 @@ public class NasdaqKafkaAvroConsumer {
                 throw new Exception("Kafka Schema not Found for Stream: " + streamName);
             }
             kafkaConsumer = getConsumer(kafkaSchema);
-
-            // seek the consumer offset to a specific timestamp
-            Map<TopicPartition,Long> timestmaps = new HashMap();
             TopicPartition topicPartition = new TopicPartition(streamName + ".stream",0);
+            kafkaConsumer.assign(Collections.singleton(topicPartition));
+            // seek to a specific timestamp
+            Map<TopicPartition,Long> timestmaps = new HashMap();
             timestmaps.put(topicPartition , timestamp);
             Map<TopicPartition, OffsetAndTimestamp> offsetsForTimes = kafkaConsumer.offsetsForTimes(timestmaps);
             System.out.println("Offset: "+ offsetsForTimes.get(topicPartition).offset());
             kafkaConsumer.seek(topicPartition, offsetsForTimes.get(topicPartition).offset());
-
-            kafkaConsumer.subscribe(Collections.singletonList(streamName + ".stream"));
 
             return kafkaConsumer;
         }
