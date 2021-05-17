@@ -9,7 +9,7 @@ This repository provides an SDK for developing applications to access the NCDS A
 ### Equities
 #### The Nasdaq Stock Market
 - [Nasdaq Basic](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NasdaqBasic-Cloud.pdf)
-- [Nasdaq Last Sale+](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NLSPlus-cloud.pdf) 
+- [Nasdaq Last Sale+](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/LongFormNLSPLUSCloudSPEC.pdf) 
 - [Nasdaq TotalView](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Totalview-ITCH-cloud.pdf)
 - [Nasdaq Consolidated Quotes and Trades](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/CQT-cloud.pdf)
 #### Nasdaq BX
