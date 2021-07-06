@@ -5,7 +5,7 @@ Nasdaq Cloud Data Service (NCDS) provides a modern and efficient method of deliv
 This repository provides an SDK for developing applications to access the NCDS API. While the SDK is open source, connecting to the API does require credentials, which are provided by Nasdaq during an on-boarding process.
 
 
-# Products Currently Available
+# Streaming Products Currently Available
 ### Equities
 #### The Nasdaq Stock Market
 - [Nasdaq Basic](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NasdaqBasic-Cloud.pdf)
