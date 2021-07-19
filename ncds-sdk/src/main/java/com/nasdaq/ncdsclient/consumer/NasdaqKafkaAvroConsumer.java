@@ -12,6 +12,7 @@ import org.apache.avro.Schema;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
+import org.apache.kafka.clients.consumer.OffsetResetStrategy;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
@@ -82,8 +83,12 @@ public class NasdaqKafkaAvroConsumer {
             if (kafkaSchema == null) {
                 throw new Exception("Kafka Schema not Found for Stream: " + streamName);
             }
-            kafkaConsumer = getConsumer(kafkaSchema);
-            kafkaConsumer.subscribe(Collections.singletonList(streamName + ".stream"));
+            kafkaConsumer = getConsumer(kafkaSchema, streamName);
+            TopicPartition topicPartition = new TopicPartition(streamName + ".stream",0);
+            kafkaConsumer.assign(Collections.singletonList(topicPartition));
+            if(kafkaProps.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).equals(OffsetResetStrategy.EARLIEST.toString().toLowerCase())) {
+                return seekToMidNight(topicPartition);
+            }
          }
         catch (Exception e) {
             throw (e);
@@ -106,7 +111,7 @@ public class NasdaqKafkaAvroConsumer {
             if (kafkaSchema == null) {
                 throw new Exception("Kafka Schema not Found for Stream: " + streamName);
             }
-            kafkaConsumer = getConsumer(kafkaSchema);
+            kafkaConsumer = getConsumer(kafkaSchema, streamName);
             TopicPartition topicPartition = new TopicPartition(streamName + ".stream",0);
             kafkaConsumer.assign(Collections.singleton(topicPartition));
 
@@ -137,7 +142,7 @@ public class NasdaqKafkaAvroConsumer {
      */
 
 
-    public  KafkaAvroConsumer getConsumer(Schema avroSchema) throws Exception {
+    public  KafkaAvroConsumer getConsumer(Schema avroSchema, String streamName) throws Exception {
         try {
             if(!IsItJunit.isJUnitTest()) {
                 ConfigProperties.resolveAndExportToSystemProperties(securityProps);
@@ -147,9 +152,9 @@ public class NasdaqKafkaAvroConsumer {
             kafkaProps.put("key.deserializer", StringDeserializer.class.getName());
             kafkaProps.put("value.deserializer", AvroDeserializer.class.getName());
             if(!kafkaProps.containsKey(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)) {
-                kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+                kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OffsetResetStrategy.EARLIEST.toString().toLowerCase());
             }
-            kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" +getDate() + "_" + UUID.randomUUID().toString());
+            kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" + streamName + "_" + getDate());
             ConfigProperties.resolve(kafkaProps);
             return new KafkaAvroConsumer(kafkaProps, avroSchema);
         }
@@ -201,8 +206,12 @@ public class NasdaqKafkaAvroConsumer {
             if (newsSchema == null) {
                 throw new Exception("News Schema not Found ");
             }
-            kafkaConsumer = getConsumer(newsSchema);
-            kafkaConsumer.subscribe(Collections.singletonList(topic+".stream"));
+            kafkaConsumer = getConsumer(newsSchema, topic);
+            TopicPartition topicPartition = new TopicPartition(topic + ".stream",0);
+            kafkaConsumer.assign(Collections.singletonList(topicPartition));
+            if(kafkaProps.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).equals(OffsetResetStrategy.EARLIEST.toString().toLowerCase())) {
+                return seekToMidNight(topicPartition);
+            }
             return kafkaConsumer;
         }
         catch (Exception e){
@@ -217,4 +226,32 @@ public class NasdaqKafkaAvroConsumer {
         String date = dateformat.format(new Date());
         return date;
     }
+
+    private KafkaConsumer seekToMidNight(TopicPartition topicPartition){
+        Map<TopicPartition,Long> timestmaps = new HashMap();
+        timestmaps.put(topicPartition , getTodayMidNightTimeStamp());
+        Map<TopicPartition, OffsetAndTimestamp> offsetsForTimes = kafkaConsumer.offsetsForTimes(timestmaps);
+        OffsetAndTimestamp offsetAndTimestamp = null;
+        if (offsetsForTimes != null && (offsetAndTimestamp = offsetsForTimes.get(topicPartition)) != null) {
+            kafkaConsumer.seek(topicPartition, offsetAndTimestamp.offset());
+        } else {
+            kafkaConsumer.seekToBeginning(Collections.singleton(topicPartition));
+        }
+        return kafkaConsumer;
+    }
+
+    private long getTodayMidNightTimeStamp(){
+
+        TimeZone timeZone = TimeZone.getTimeZone("America/New_York");
+
+        Calendar today = Calendar.getInstance(timeZone);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+
+        long timestampFromMidnight = today.getTimeInMillis();
+
+        return timestampFromMidnight;
+    }
+
 }

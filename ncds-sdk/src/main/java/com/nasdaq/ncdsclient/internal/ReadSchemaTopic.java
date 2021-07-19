@@ -5,10 +5,8 @@ import com.nasdaq.ncdsclient.internal.utils.KafkaConfigLoader;
 import io.strimzi.kafka.oauth.common.ConfigProperties;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.time.Duration;
@@ -34,7 +32,6 @@ public class ReadSchemaTopic {
 
     public Schema readSchema(String topic) throws Exception {
         KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
-        schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
         Duration sec = Duration.ofSeconds(10);
         Schema messageSchema = null;
         ConsumerRecord<String,GenericRecord> lastRecord=null;
@@ -92,7 +89,6 @@ public class ReadSchemaTopic {
         Set<String> topics = new HashSet<String>();
 
         KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
-        schemaConsumer.subscribe(Collections.singletonList(controlSchemaName));
         Duration sec = Duration.ofSeconds(10);
         while (true) {
             ConsumerRecords<String, GenericRecord> schemaRecords = schemaConsumer.poll(sec);
@@ -130,34 +126,66 @@ public class ReadSchemaTopic {
             }
 
             Schema.Parser parser = new Schema.Parser();
-            controlMessageSchema = parser.parse(ClassLoader.getSystemResourceAsStream("ControlMessageSchema.avsc"));
+            //controlMessageSchema = parser.parse(ClassLoader.getSystemResourceAsStream("ControlMessageSchema.avsc"));
+            controlMessageSchema = parser.parse(this.getClass().getResourceAsStream("/ControlMessageSchema.avsc"));
 
             if (IsItJunit.isJUnitTest()) {
                 kafkaProps = KafkaConfigLoader.loadConfig();
             }
             kafkaProps.put("key.deserializer", StringSerializer.class.getName());
             kafkaProps.put("value.deserializer", AvroDeserializer.class.getName());
-            kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-            kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, cleindId + "_" + UUID.randomUUID().toString());
+            kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OffsetResetStrategy.EARLIEST.toString().toLowerCase());
+            kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, cleindId);
             kafkaProps.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "5048576");
             ConfigProperties.resolve(kafkaProps);
         }
         catch (Exception e) {
             throw e;
         }
-        return new KafkaAvroConsumer(kafkaProps, controlMessageSchema);
 
+        KafkaAvroConsumer kafkaAvroConsumer = new KafkaAvroConsumer(kafkaProps, controlMessageSchema);
+        TopicPartition topicPartition = new TopicPartition(controlSchemaName,0);
+        kafkaAvroConsumer.assign(Collections.singletonList(topicPartition));
+        return seekTo7DaysBack(kafkaAvroConsumer, topicPartition);
     }
 
     private Schema internalSchema (String topic) throws Exception {
         try {
             final Schema topicSchema;
             Schema.Parser parser = new Schema.Parser();
-            topicSchema = parser.parse(ClassLoader.getSystemResourceAsStream("schemas/" + topic + ".avsc"));
+            topicSchema = parser.parse(this.getClass().getResourceAsStream("schemas/" + topic + ".avsc"));
             return topicSchema;
         } catch (Exception e){
             throw new Exception("SCHEMA NOT FOUND FOR TOPIC: "+ topic);
         }
+    }
+
+    private KafkaAvroConsumer seekTo7DaysBack(KafkaAvroConsumer kafkaAvroConsumer, TopicPartition topicPartition){
+        Map<TopicPartition,Long> timestmaps = new HashMap();
+        timestmaps.put(topicPartition , getTodayMidNightTimeStamp());
+        Map<TopicPartition, OffsetAndTimestamp> offsetsForTimes = kafkaAvroConsumer.offsetsForTimes(timestmaps);
+        OffsetAndTimestamp offsetAndTimestamp = null;
+        if (offsetsForTimes != null && (offsetAndTimestamp = offsetsForTimes.get(topicPartition)) != null) {
+            kafkaAvroConsumer.seek(topicPartition, offsetAndTimestamp.offset());
+        } else {
+            kafkaAvroConsumer.seekToBeginning(Collections.singleton(topicPartition));
+        }
+        return kafkaAvroConsumer;
+    }
+
+    private long getTodayMidNightTimeStamp(){
+
+        TimeZone timeZone = TimeZone.getTimeZone("America/New_York");
+
+        Calendar today = Calendar.getInstance(timeZone);
+        today.add(Calendar.DATE, -7);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+
+        long timestampFromMidnight = today.getTimeInMillis();
+
+        return timestampFromMidnight;
     }
 
    }
