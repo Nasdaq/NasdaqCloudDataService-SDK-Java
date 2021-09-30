@@ -21,7 +21,7 @@ spec:
         key: secret
         secretName: clientsecret
       disableTlsHostnameVerification: false
-      tokenEndpointUri: https://{auth_endpoint_url}/auth/realms/demo/protocol/openid-connect/token
+      tokenEndpointUri: https://{auth_endpoint_url}/auth/realms/pro-realm/protocol/openid-connect/token
   producer:
     bootstrapServers: kafka-cluster-kafka-bootstrap.localkafka:9092
   #    authentication:
