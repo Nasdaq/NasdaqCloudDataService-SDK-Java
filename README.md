@@ -84,7 +84,7 @@ max.poll.records=2000
    Replace example client authentication properties in the file **clientAuthentication-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/clientAuthentication-config.properties) with valid credentials provided during on-boarding.
    
 ```properties
-oauth.token.endpoint.uri=https://{auth_endpoint_url}/auth/realms/demo/protocol/openid-connect/token
+oauth.token.endpoint.uri=https://{auth_endpoint_url}/auth/realms/pro-realm/protocol/openid-connect/token
 oauth.client.id=client
 oauth.client.secret=client-secret
 oauth.username.claim=preferred_username
