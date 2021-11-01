@@ -14,9 +14,6 @@ public class AuthenticationConfigLoader {
     public static String OAUTH_CLIENT_ID ="oauth.client.id";
     public static String OAUTH_CLIENT_SECRET="oauth.client.secret";
     public static String OAUTH_USERNAME_CLAIM="oauth.username.claim";
-    public static String JAVAX_NET_SSL_TRUSTSTORE="javax.net.ssl.trustStore";
-    public static String JAVAX_NET_SSL_TRUSTSTOREPASSWORD="javax.net.ssl.trustStorePassword";
-    public static String JAVAX_NET_SSL_TRUSTSTORETYPE="javax.net.ssl.trustStoreType";
 
     public static String getClientID(){
         String clientID;
@@ -59,7 +56,7 @@ public class AuthenticationConfigLoader {
         }
     }
 
-    public static boolean validateSecurityConfig(Properties cfg) throws Exception {
+    public static boolean validateSecurityConfig(Properties cfg, Properties kafkaCfg) throws Exception {
 
         addNasdaqSpecificAuthProperties(cfg);
         if (cfg.getProperty(OAUTH_TOKEN_ENDPOINT_URI) == null) {
@@ -73,15 +70,6 @@ public class AuthenticationConfigLoader {
         }
         if (cfg.getProperty(OAUTH_USERNAME_CLAIM) == null) {
             throw new Exception("Authentication Setting :" + OAUTH_USERNAME_CLAIM  + " Missing" );
-        }
-        if (cfg.getProperty(JAVAX_NET_SSL_TRUSTSTORE) == null && System.getenv("JAVAX_NET_SSL_TRUSTSTORE") == null) {
-            throw new Exception("Authentication Setting :" + JAVAX_NET_SSL_TRUSTSTORE  + " Missing" );
-        }
-        if (cfg.getProperty(JAVAX_NET_SSL_TRUSTSTOREPASSWORD) == null && System.getenv("JAVAX_NET_SSL_TRUSTSTOREPASSWORD") == null) {
-            throw new Exception ("Authentication Setting :" + JAVAX_NET_SSL_TRUSTSTOREPASSWORD  + " Missing" );
-        }
-        if (cfg.getProperty(JAVAX_NET_SSL_TRUSTSTORETYPE) == null) {
-            throw new Exception ("Authentication Setting :" + JAVAX_NET_SSL_TRUSTSTORETYPE  + " Missing" );
         }
 
         return true;

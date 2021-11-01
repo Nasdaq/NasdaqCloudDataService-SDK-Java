@@ -18,10 +18,6 @@ COPY --from=builder /ncdssdk-client/target/ncdssdk-client.jar /home/kafka/app.ja
 
 WORKDIR /home/kafka
 
-RUN mkdir truststore
-
-ENV JAVAX_NET_SSL_TRUSTSTORE=truststore/ncdsTrustStore.p12
-
 ENTRYPOINT ["bash","docker/run-sdk-app.sh"]
 
 CMD ["-opt", "TOPICS"]

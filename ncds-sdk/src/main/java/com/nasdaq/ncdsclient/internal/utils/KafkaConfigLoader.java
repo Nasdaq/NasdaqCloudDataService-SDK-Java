@@ -9,7 +9,11 @@ import java.util.*;
  * Utility to load the kafka configuration parameters.
  */
 public class KafkaConfigLoader {
-    public static String BOOTSTRAP_SERVERS="bootstrap.servers";
+    public static final String BOOTSTRAP_SERVERS = "bootstrap.servers";
+    public static final String SSL_TRUSTSTORE_TYPE = "ssl.truststore.type";
+    public static final String SSL_TRUSTSTORE_LOCATION = "ssl.truststore.location";
+    public static final String SSL_TRUSTSTORE_PASSWORD = "ssl.truststore.password";
+
     public static Properties loadConfig() throws Exception {
         Properties cfg = new Properties();
         InputStream inputStream;
@@ -35,7 +39,6 @@ public class KafkaConfigLoader {
             p.setProperty("sasl.mechanism", "OAUTHBEARER");
             p.setProperty("sasl.jaas.config", "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required ;");
             p.setProperty("sasl.login.callback.handler.class", "io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler");
-            p.setProperty("ssl.endpoint.identification.algorithm","");
         }
         return p;
     }
