@@ -1,7 +1,5 @@
 package com.nasdaq.ncdsclient;
 
-import com.nasdaq.ncdsclient.internal.utils.InstallCertificates;
-import com.nasdaq.ncdsclient.news.News;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -32,8 +30,6 @@ public class NCDSSession {
         String symbols = null;
         String msgTypes = null;
         String messageName = null;
-        String keyStorePath = null;
-        String keyStorePassword = null;
         String numberOfTopMessage = null;
         Long timestamp = null;
 
@@ -95,16 +91,6 @@ public class NCDSSession {
                 }
                 messageName = cmd.valueOf("-msgName");
                 topic = cmd.valueOf("-topic");
-                break;
-            case "INSTALLCERTS":
-                if(!cmd.hasOption("-path") || !cmd.hasOption("-pass")){
-                    System.out.println("You must provide -path (Directory path) and -pass (Password) for getting example message");
-                    printHelpMessage();
-                    System.exit(0);
-                    break;
-                }
-                keyStorePath = cmd.valueOf("-path");
-                keyStorePassword = cmd.valueOf("-pass");
                 break;
             case "CONTSTREAM":
                 if(!cmd.hasOption("-topic")){
@@ -252,16 +238,6 @@ public class NCDSSession {
                     System.exit(0);
                 }
                 ncdsClient.getSampleMessages(topic, messageName, true);
-            }
-            else if (testOption.equals("INSTALLCERTS")){
-                try
-                {
-                    System.out.println("Installing Certificates ");
-                    new InstallCertificates(keyStorePath,keyStorePassword).install();
-                    System.out.println("Installed certificate at :"+keyStorePath+File.separator+"ncdsTrustStore.p12");
-                }catch (Exception e){
-                    System.out.println("Error in installing certificates " + e);
-                }
             }
             else if (testOption.equals("TOPICS")){
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
@@ -443,7 +419,6 @@ public class NCDSSession {
                               "        * METRICS - Display the Metrics for the topic\n"+
                               "        * TOPICS - List the eligible topics for the client\n"+
                               "        * GETMSG - Get one example message for the\n"+
-                              "        * INSTALLCERTS - Install certificate to keystore\n"+
                               "        * CONTSTREAM   - Retrieve continuous stream  \n"+
                               "        * FILTERSTREAM  - Retrieve continuous stream filtered by symbols and/or msgtypes \n"+
                               "        * NEWS - Retrieve news stream               \n"+
@@ -455,8 +430,6 @@ public class NCDSSession {
                             "-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
                             "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
                             "-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
-                            "-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS \n"+
-                            "-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"+
                             "-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP and CONTSTREAM and FILTERSTREAM\n"
         );
     }

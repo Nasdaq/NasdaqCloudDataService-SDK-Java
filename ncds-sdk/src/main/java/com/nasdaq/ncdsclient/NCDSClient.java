@@ -34,7 +34,7 @@ public class NCDSClient {
      */
     public NCDSClient(Properties securityCfg,Properties kafkaCfg) throws Exception {
         try {
-            if (securityCfg != null && AuthenticationConfigLoader.validateSecurityConfig(securityCfg)) {
+            if (securityCfg != null && AuthenticationConfigLoader.validateSecurityConfig(securityCfg, kafkaCfg)) {
                 nasdaqKafkaAvroConsumer = new NasdaqKafkaAvroConsumer(securityCfg,kafkaCfg);
             }
             else if (IsItJunit.isJUnitTest()) {

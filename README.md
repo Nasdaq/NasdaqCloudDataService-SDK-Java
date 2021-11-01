@@ -1,6 +1,6 @@
 # Nasdaq Cloud Data Service (NCDS) - Streaming Client Java SDK
 
-Nasdaq Cloud Data Service (NCDS) provides a modern and efficient method of delivery for realtime exchange data and other financial information. Data is made available through a suite of APIs, allowing for effortless integration of data from disparate sources, and a dramatic reduction in time to market for customer-designed applications. The API is highly scalable, and robust enough to support the delivery of real-time exchange data. Read our latest NCDS case study: <a href="https://www.nasdaq.com/docs/2021/05/13/1323-Q21_Unhedged%20NCDS%20Case%20Study_II-v2.pdf">Nasdaq Cloud Data Service Provides Real-Time Data with Efficiency and Scale to Fintech Newcomer Unhedged</a> 
+Nasdaq Cloud Data Service (NCDS) provides a modern and efficient method of delivery for realtime exchange data and other financial information. Data is made available through a suite of APIs, allowing for effortless integration of data from disparate sources, and a dramatic reduction in time to market for customer-designed applications. The API is highly scalable, and robust enough to support the delivery of real-time exchange data. Read our latest NCDS case study: <a href="https://www.nasdaq.com/docs/2021/05/13/1323-Q21_Unhedged%20NCDS%20Case%20Study_II-v2.pdf">Nasdaq Cloud Data Service Provides Real-Time Data with Efficiency and Scale to Fintech Newcomer Unhedged</a>
 
 This repository provides an SDK for developing applications to access the NCDS API. While the SDK is open source, connecting to the API does require credentials, which are provided by Nasdaq during an on-boarding process.
 
@@ -9,7 +9,7 @@ This repository provides an SDK for developing applications to access the NCDS A
 ### Equities
 #### The Nasdaq Stock Market
 - [Nasdaq Basic](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NasdaqBasic-Cloud.pdf)
-- [Nasdaq Last Sale+](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NLSPlus-cloud.pdf) 
+- [Nasdaq Last Sale+](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NLSPlus-cloud.pdf)
 - [Nasdaq TotalView](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/Totalview-ITCH-cloud.pdf)
 - [Nasdaq Consolidated Quotes and Trades](https://github.com/Nasdaq/CloudDataService/raw/master/specs/CQT-cloud.pdf)
 #### Nasdaq BX
@@ -24,24 +24,24 @@ This repository provides an SDK for developing applications to access the NCDS A
 - [Global Index Data Service](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/GIDS_Cloud.pdf)
 ### Options
 #### Nasdaq U.S. Derivatives
-- [Nasdaq Smart Options](http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NCDSSmartOptions.pdf) 
+- [Nasdaq Smart Options](http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NCDSSmartOptions.pdf)
 ### Mutual Funds
-- [Nasdaq Fund Network](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NFNDS_NCDS.pdf) 
+- [Nasdaq Fund Network](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NFNDS_NCDS.pdf)
 ### News
-- [Financial News](http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)  
+- [Financial News](http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)
 
 # Table of Contents
- - [Getting Started](#Getting-Started)
- - [Using the SDK](#Using-The-SDK)
- - [Documentation](#Documentation)
- - [Docker](#Docker)
- - [Contributing](#Contributing)
- - [License](#License)
- 
+- [Getting Started](#Getting-Started)
+- [Using the SDK](#Using-The-SDK)
+- [Documentation](#Documentation)
+- [Docker](#Docker)
+- [Contributing](#Contributing)
+- [License](#License)
+
 
 ## Getting Started
 
-### Pre-requisites 
+### Pre-requisites
 
 - OpenJDK 8
 - Maven 3
@@ -49,58 +49,43 @@ This repository provides an SDK for developing applications to access the NCDS A
 ### Get the SDK
 
 Clone the repository: ```git clone https://github.com/Nasdaq/CloudDataService```
-  - Run ```mvn install``` to build the library, test, javadoc and source jars and install to your local Maven repository.
-  - Run ```mvn javadoc:javadoc``` to build the documentation.
-
-### Retrieving certificates 
-
-Run jar `ncdssdk-client/target/ncdssdk-client.jar` with arguments, which take path and password (minimum 6 characters) for keystore
-
-For example: 
-
-```java -jar ncdssdk-client.jar -opt INSTALLCERTS -path /my/trusted/store/ncdsinstallcerts -pass my_password```
+- Run ```mvn install``` to build the library, test, javadoc and source jars and install to your local Maven repository.
+- Run ```mvn javadoc:javadoc``` to build the documentation.
 
 ### Stream configuration
 
-  Replace example stream properties in the file **kafka-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/kafka-config.properties) with provided values during on-boarding.
+Replace example stream properties in the file **kafka-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/kafka-config.properties) with provided values during on-boarding.
 
- Required kafka configuration 
-    
+Required kafka configuration
+
 ```properties
 bootstrap.servers={streams_endpoint_url}:9094
 ```
-    
-  For optional consumer configurations see: https://kafka.apache.org/0100/javadoc/org/apache/kafka/clients/consumer/ConsumerConfig.html
-  
-  For example:  
+
+For optional consumer configurations see: https://kafka.apache.org/0100/javadoc/org/apache/kafka/clients/consumer/ConsumerConfig.html
+
+For example:
 ```properties
 request.timeout.ms=20000
 retry.backoff.ms=500
 max.poll.records=2000
 ```
- 
+
 ### Client Authentication configuration
 
-   Replace example client authentication properties in the file **clientAuthentication-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/clientAuthentication-config.properties) with valid credentials provided during on-boarding.
-   
+Replace example client authentication properties in the file **clientAuthentication-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/clientAuthentication-config.properties) with valid credentials provided during on-boarding.
+
 ```properties
 oauth.token.endpoint.uri=https://{auth_endpoint_url}/auth/realms/pro-realm/protocol/openid-connect/token
 oauth.client.id=client
 oauth.client.secret=client-secret
 oauth.username.claim=preferred_username
-```   
-   Update the path to your local Keystore  
-
-```properties
-javax.net.ssl.trustStore=/my/trusted/store/ncdsinstallcerts/ncdsTrustStore.p12  
-javax.net.ssl.trustStorePassword=my_password
-javax.net.ssl.trustStoreType=PKCS12
-```  
+```
 
 ### Create NCDS Session Client
 
-  Run `mvn clean install` command in ncdssdk-client project (https://github.com/Nasdaq/CloudDataService/tree/master/ncdssdk-client). It will generate the jar file in target file.
-  How to run the jar:
+Run `mvn clean install` command in ncdssdk-client project (https://github.com/Nasdaq/CloudDataService/tree/master/ncdssdk-client). It will generate the jar file in target file.
+How to run the jar:
 ```
 -opt -- Provide the operation you want to perform \n" +
   "        * TOP - View the top nnn records in the Topic/Stream\n"+
@@ -108,7 +93,6 @@ javax.net.ssl.trustStoreType=PKCS12
   "        * METRICS - Display the Metrics for the topic\n"+
   "        * TOPICS - List of streams available on Nasdaq Cloud DataService\n"+
   "        * GETMSG - Get one example message for the\n"+
-  "        * INSTALLCERTS - Install certificate to keystore\n"+
   "        * CONTSTREAM   - Retrieve continuous stream  \n"+
   "        * FILTERSTREAM  - Retrieve continuous stream filtered by symbols and/or msgtypes \n"+
   "        * NEWS - Get stream for Pro Global news stream\n"+
@@ -120,26 +104,24 @@ javax.net.ssl.trustStoreType=PKCS12
 "-kafkaprops -- Provide Kafka Properties File path   --- For using different set of Kafka Properties \n"+
 "-n -- Provide number of messages to retrieve        --- REQUIRED for TOP \n"+
 "-msgName -- Provide name of message based on schema --- REQUIRED for GETMSG \n"+
-"-path -- Provide the path for key store             --- REQUIRED for INSTALLCERTS \n"+
-"-pass -- Provide the password for key store         --- REQUIRED for INSTALLCERTS \n"+
 "-timestamp -- Provide timestamp in milliseconds     --- OPTIONAL for TOP, CONTSTREAM and FILTERSTREAM\n"
 ```
- 
-  Few examples to use jar:
-  
-  Get first 100 records for given stream
-  
-  ```java -jar ncdssdk-client.jar -opt TOP -n 100 -topic GIDS```
-  
-  Get all available streams
-  
-  ```java -jar ncdssdk-client.jar -opt TOPICS```  
- 
+
+Few examples to use jar:
+
+Get first 100 records for given stream
+
+```java -jar ncdssdk-client.jar -opt TOP -n 100 -topic GIDS```
+
+Get all available streams
+
+```java -jar ncdssdk-client.jar -opt TOPICS```
+
 
 ## Using the SDK
 
-  ### Getting list of data stream available
-  List all available data stream for the user.
+### Getting list of data stream available
+List all available data stream for the user.
 ```java
 // Example1.java
 NCDSClient ncdsClient = new NCDSClient();
@@ -150,7 +132,7 @@ for (String topicEntry : topics) {
 }
 ```
 
- Example output:
+Example output:
 ```
 List of streams available on Nasdaq Cloud DataService:
 GIDS
@@ -158,8 +140,8 @@ NLSUTP
 NLSCTA
 ```
 
-  ### Getting schema for the stream
-  This methods returns the schema for the stream in Apache Avro format (https://avro.apache.org/docs/current/spec.html).  
+### Getting schema for the stream
+This methods returns the schema for the stream in Apache Avro format (https://avro.apache.org/docs/current/spec.html).
 ```java
 // Example2.java
 NCDSClient ncdsClient = new NCDSClient();
@@ -167,7 +149,7 @@ String topic = "GIDS";
 String schema = ncdsClient.getSchemaForTheTopic(topic);
 System.out.println(schema);
 ```
-  Example output:
+Example output:
 ```
 [ {
     "type" : "record",
@@ -212,7 +194,7 @@ System.out.println(schema);
 ```
 
 ### Get first 10 messages of the stream
- This returns the first 10 available messages of the stream.
+This returns the first 10 available messages of the stream.
 ```java
 // Example2.java
 NCDSClient ncdsClient = new NCDSClient();
@@ -223,7 +205,7 @@ for (ConsumerRecord<String, GenericRecord> record : records) {
     System.out.println("value:" + record.value().toString());
 }
 ```
- Example output:
+Example output:
 ```
 key:1
 value:{"SoupPartition": 0, "SoupSequence": 1, "trackingID": 7238625218217, "msgType": "S", "event": "O"}
@@ -248,7 +230,7 @@ value:{"SoupPartition": 0, "SoupSequence": 10, "trackingID": 11231714853049, "ms
 ```
 
 ### Get first 10 messages of the stream from given timestamp
- This returns the first 10 available messages of the stream from given timestamp in milliseconds since the UNIX epoch.
+This returns the first 10 available messages of the stream from given timestamp in milliseconds since the UNIX epoch.
 ```java
 // Example3.java
 NCDSClient ncdsClient = new NCDSClient();
@@ -260,7 +242,7 @@ for (ConsumerRecord<String, GenericRecord> record : records) {
     System.out.println("value:" + record.value().toString());
 }
 ```
- Example output:
+Example output:
  ```
 Offset: 105834100
 Top 10 Records for the Topic:NLSCTA
@@ -287,13 +269,13 @@ value :{"SoupPartition": 0, "SoupSequence": 9362639, "trackingID": 5084560059456
 ```
 
 ### Get example message from stream
- Print message to the console for given message name.
+Print message to the console for given message name.
 ```java
 NCDSClient ncdsClient = new NCDSClient();
 String topic="GIDS"
 ncdsClient.getSampleMessages(topic, "SeqIndexDirectory");
 ```
- Example output:
+Example output:
  ```
  {"SoupPartition": 0, "SoupSequence": 193, "msgType": "R", "timeStamp": 224140137, "instrumentID": "NQJP3700LMCAD     ", "disseminationFlag": "Y", "fpType": "I", "brand": "NQ", "series": "NQG", "strategy": "SEC", "assetType": "EQ", "marketCapSize": "X", "currency": "CAD", "geography": "JP  ", "settlementType": " ", "calculationMethod": "PR ", "state": "A", "indexUsage": "L", "schedule": "ASI", "frequency": "ODCL", "numberOfIssueParticipation": 23, "baseValue": 100000000000000, "baseDate": 20140111, "instrumentName": "NASDAQ Japan Psnl & Hhld Goods Lg Md Cap CAD"}
 ```
@@ -330,7 +312,7 @@ while (true) {
 }
 ```
 
- Example output:
+Example output:
 ```-----------------------------------------------------------------------------------------------
    News :ReleaseTime: 2020/04/03 14:40:00
    TransmissionID: A2136726
@@ -362,60 +344,56 @@ while (true) {
 ### Example syntax to run the Client Jar based on this SDK
 
 1. To list of streams available on Nasdaq Cloud DataService
- 
- ```java -jar ncdssdk-client.jar -opt TOPICS```
- 
+
+```java -jar ncdssdk-client.jar -opt TOPICS```
+
 2. To display the schema for the given topic
- 
- ```java -jar ncdssdk-client.jar -opt SCHEMA -topic NLSUTP```
- 
+
+```java -jar ncdssdk-client.jar -opt SCHEMA -topic NLSUTP```
+
 3. To dump top n records from the given topic
- 
- ```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP```
- 
+
+```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP```
+
 4. To use client based specific authorization file instead of using from the resources of client code base
 
- ```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -authprops clntauth.properties```
- 
+```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -authprops clntauth.properties```
+
 5. To use the specific kafka properties instead of using the kafka properties from the resources of the client base code
 
-  ```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -kafkaprops kafkaprops.properties```
-  
+```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -kafkaprops kafkaprops.properties```
+
 6. To use the specific client based authorization file and specific kafka properties file
 
-  ```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -authprops clntauth.properties -kafkaprops kafkaprops.properties```
-  
+```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -authprops clntauth.properties -kafkaprops kafkaprops.properties```
+
 7. To display a specific message type
 
-  ```java -jar ncdssdk-client.jar -opt GETMSG -topic UTPBIN-UF30 -msgName SeqTradeLong```
-  
-8. To install the certificates
-
-  ```java -jar ncdssdk-client.jar -opt INSTALLCERTS -path /home/ec2-user/testInstallCerts -pass testuser```
+```java -jar ncdssdk-client.jar -opt GETMSG -topic UTPBIN-UF30 -msgName SeqTradeLong```
 
 9. To dump top n records from the given topic from given timestamp in milliseconds since the UNIX epoch
 
-  ```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -timestamp 1590084445610 ```
+```java -jar ncdssdk-client.jar -opt TOP -n 10 -topic NLSUTP -timestamp 1590084445610 ```
 
 10. To get filtered stream by symbols or/and message-types
 
-  ```java -jar ncdssdk-client.jar -opt FILTERSTREAM -topic NLSUTP -symbols AAPL,NDAQ -msgtypes SeqTradeReportMessage```
+```java -jar ncdssdk-client.jar -opt FILTERSTREAM -topic NLSUTP -symbols AAPL,NDAQ -msgtypes SeqTradeReportMessage```
 
 11. To get all messages for given type messagtype
 
-  ```java -jar ncdssdk-client.jar -opt GETALLMSGS -topic NLSUTP -msgName SeqTradeReportMessage```
+```java -jar ncdssdk-client.jar -opt GETALLMSGS -topic NLSUTP -msgName SeqTradeReportMessage```
 
- 
 
-## Documentation 
- 
-   An addition to the example application, there is extra documentation at the package and class level within the JavaDocs, which are located in project ```https://github.com/Nasdaq/CloudDataService/tree/master/ncds-sdk/docs```
-   
-   If you make an update, you can run `mvn javadocs:javadocs` to update documents.
+
+## Documentation
+
+An addition to the example application, there is extra documentation at the package and class level within the JavaDocs, which are located in project ```https://github.com/Nasdaq/CloudDataService/tree/master/ncds-sdk/docs```
+
+If you make an update, you can run `mvn javadocs:javadocs` to update documents.
 
 ## Docker
-   
-   Docker images are already configured to run the SDK. View the instructions (https://github.com/Nasdaq/CloudDataService/blob/master/docker/README.md)
+
+Docker images are already configured to run the SDK. View the instructions (https://github.com/Nasdaq/CloudDataService/blob/master/docker/README.md)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
