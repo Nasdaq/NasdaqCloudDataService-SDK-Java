@@ -89,7 +89,7 @@ public class NasdaqKafkaAvroConsumer {
             if(kafkaProps.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).equals(OffsetResetStrategy.EARLIEST.toString().toLowerCase())) {
                 return seekToMidNight(topicPartition);
             }
-         }
+        }
         catch (Exception e) {
             throw (e);
         }
@@ -154,7 +154,9 @@ public class NasdaqKafkaAvroConsumer {
             if(!kafkaProps.containsKey(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)) {
                 kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OffsetResetStrategy.EARLIEST.toString().toLowerCase());
             }
-            kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" + streamName + "_" + getDate());
+            if(!kafkaProps.containsKey(ConsumerConfig.GROUP_ID_CONFIG)) {
+                kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" + streamName + "_" + getDate());
+            }
             ConfigProperties.resolve(kafkaProps);
             return new KafkaAvroConsumer(kafkaProps, avroSchema);
         }
@@ -171,7 +173,7 @@ public class NasdaqKafkaAvroConsumer {
      */
     public  Schema getSchemaForTopic(String topic) throws Exception {
         try {
-             Schema kafkaSchema = readSchemaTopic.readSchema(topic);
+            Schema kafkaSchema = readSchemaTopic.readSchema(topic);
             return kafkaSchema;
         }
         catch (Exception e) {
@@ -188,7 +190,7 @@ public class NasdaqKafkaAvroConsumer {
     public List<String> getTopics() throws Exception {
         try{
             List<String> topicsList= new ArrayList<>();
-             topicsList.addAll(readSchemaTopic.getTopics());
+            topicsList.addAll(readSchemaTopic.getTopics());
             return topicsList;
         }
         catch (Exception e){
