@@ -55,6 +55,7 @@ Clone the repository: ```git clone https://github.com/Nasdaq/CloudDataService```
 ### Stream configuration
 
 =======
+
 Replace example stream properties in the file **kafka-config.properties** (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/kafka-config.properties) with provided values during on-boarding.
 
 Required kafka configuration
