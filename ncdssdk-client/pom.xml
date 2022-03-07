@@ -7,11 +7,12 @@
     <parent>
         <groupId>com.nasdaq.ncds</groupId>
         <artifactId>ncds</artifactId>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
     </parent>
 
     <artifactId>ncdssdk-client</artifactId>
     <packaging>jar</packaging>
+
     <name>Client</name>
     <description>Provide example client to interact with data</description>
 

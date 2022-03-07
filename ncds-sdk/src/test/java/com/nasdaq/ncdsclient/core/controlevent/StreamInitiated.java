@@ -1,7 +1,6 @@
 package com.nasdaq.ncdsclient.core.controlevent;
 
 import org.apache.avro.Schema;
-import org.h2.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -59,11 +58,6 @@ public class StreamInitiated extends ControlEvent {
 
     public Schema getMessageSchema() {
         return messageSchema;
-    }
-
-    public boolean isSameStreamForDate(final StreamInitiated other) {
-        return StringUtils.equals(this.name, other.name)
-                && this.referenceDate.equals(other.referenceDate);
     }
 
     @Override

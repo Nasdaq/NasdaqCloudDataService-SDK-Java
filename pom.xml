@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.nasdaq.ncds</groupId>
     <artifactId>ncds</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <packaging>pom</packaging>
     <name>Nasdaq Cloud Data Service </name>
 
@@ -16,7 +16,8 @@
 
     <properties>
         <avro.version>1.8.2</avro.version>
-        <kafka.version>2.6.0</kafka.version>
+        <kafka.version>2.8.0</kafka.version>
+        <strimzi.oauth.version>0.8.1</strimzi.oauth.version>
         <checkstyle.skip>true</checkstyle.skip>
     </properties>
 
@@ -40,9 +41,8 @@
         <dependency>
             <groupId>io.strimzi</groupId>
             <artifactId>kafka-oauth-client</artifactId>
-            <version>0.6.0</version>
+            <version>${strimzi.oauth.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.slf4j</groupId>
