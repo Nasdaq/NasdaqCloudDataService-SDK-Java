@@ -7,37 +7,25 @@
     <parent>
         <groupId>com.nasdaq.ncds</groupId>
         <artifactId>ncds</artifactId>
-        <version>0.6.0</version>
+        <version>0.7.0</version>
     </parent>
 
     <artifactId>ncds-sdk</artifactId>
     <packaging>jar</packaging>
     <properties>
         <kafkaScalaVersion>kafka_2.12</kafkaScalaVersion>
-        <junit5.version>5.6.2</junit5.version>
+        <junit5.version>5.7.2</junit5.version>
         <junit5PlatformProvider.version>1.3.2</junit5PlatformProvider.version>
         <curatorTestVersion>2.12.0</curatorTestVersion>
         <slf4jVersion>1.7.30</slf4jVersion>
         <surefire.version>2.22.2</surefire.version>
+        <strimzi.oauth.version>0.8.1</strimzi.oauth.version>
     </properties>
 
     <name>SDK</name>
     <description>Provide Development Kit to connect with Kafka</description>
 
     <dependencies>
-        <!-- Apache https for getting certificate -->
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
@@ -50,8 +38,7 @@
         <dependency>
             <groupId>io.strimzi</groupId>
             <artifactId>kafka-oauth-common</artifactId>
-            <version>0.6.0</version>
-            <scope>compile</scope>
+            <version>${strimzi.oauth.version}</version>
         </dependency>
 
         <!--  Testing -->
@@ -78,7 +65,7 @@
         <dependency>
             <groupId>com.salesforce.kafka.test</groupId>
             <artifactId>kafka-junit-core</artifactId>
-            <version>3.2.2</version>
+            <version>3.2.3</version>
             <scope>test</scope>
         </dependency>
 
@@ -132,13 +119,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.3.176</version>
             <scope>test</scope>
         </dependency>
 
