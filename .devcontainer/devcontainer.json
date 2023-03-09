@@ -1,0 +1,35 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+ "createCustomerProfileRequest": {
+"description": "clientSocket.eConnect("127.0.0.1", 7497, U11212019, DU6482669)": "/Create a reader to consume messages from the TWS. The EReader will consume the incoming messages and put them in a queue
+            var reader = new EReader(clientSocket.IsConnected("127.0.0.1", 7497, U11212019, DU6482669)"
+ "createCustomerProfileRequest": {
+        "merchantAuthentication": {
+            "name": "7arMhH954",
+            "transactionKey": "8L5SdG9N85xrcK5R"
+            "Account ID" : "562532251"
+            "displayName": "DU6482669"
+            "Payment Gateway ID" : "2532163"
+            "cardNumber": "377772191980621"
+            "email": "meccaexpressinc@att.net"
+            "accountId": " U11212019"
+            "description": "clientSocket.eConnect("127.0.0.1", 7497, U11212019, DU6482669)"
+            "Client Key":	"77PyfPqw7F583p29NA4P23AmRgRy4YqaZAaNH6rhWFXnJSt7rg87YZdweDaL9r3n"
+            "Account Name" : "INTERACTIVE BROKERS"
+            "Application" : "Chase Payments First"
+            "WePay" : "3ad07571-2638-46a2-8664-310bdacdcc1f"
+            "signet" : "3ad07571-2638-46a2-8664-310bdacdcc1f"
+            "Log file" : "C:\Jts\ibgateway\1021\blaiklejalpcohlmilbfmockcfhdfeidaojjghgb\ibgateway.20230215.085412.ibgzenc"
+            "Chase" : "484103959715856384"
+"Chase Payments First" : "484103959715856384"
+Client Key Last Obtained:	02/15/2023 14:46:00
+             },
+        "profile": {
+            "merchantCustomerId": "2532163",
+            "description": "clientSocket.eConnect("127.0.0.1", 7497, U11212019, DU6482669`);",
+            "email": "meccaexpressinc@att.net",
+            "paymentProfiles": {
+                "customerType": "    "accountId": " U11212019 for Individual Live Accounts, DU6482669 for Individual Live Accounts",
+  }
+}
