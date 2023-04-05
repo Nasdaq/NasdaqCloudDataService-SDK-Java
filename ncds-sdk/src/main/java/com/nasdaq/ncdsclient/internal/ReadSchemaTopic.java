@@ -153,7 +153,7 @@ public class ReadSchemaTopic {
         try {
             final Schema topicSchema;
             Schema.Parser parser = new Schema.Parser();
-            topicSchema = parser.parse(this.getClass().getResourceAsStream("schemas/" + topic + ".avsc"));
+            topicSchema = parser.parse(this.getClass().getResourceAsStream("/schemas/" + topic + ".avsc"));
             return topicSchema;
         } catch (Exception e){
             throw new Exception("SCHEMA NOT FOUND FOR TOPIC: "+ topic);
