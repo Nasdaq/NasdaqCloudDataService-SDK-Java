@@ -127,7 +127,6 @@ For example, to enable debug logging to a file:
 
 </log4j:configuration>
 ```
-Be sure to re-compile the SDK after making the above changes via `mvn clean install`.
 
 ### Create NCDS Session Client
 
