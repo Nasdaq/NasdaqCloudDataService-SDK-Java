@@ -98,6 +98,35 @@ oauth.client.id=client
 oauth.client.secret=client-secret
 oauth.username.claim=preferred_username
 ```
+### Logging Configuration
+
+To enable debug logging, edit the file (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/log4j.xml) and change the logging levels in whichever handler you would like output to go to.
+
+For example, to enable debug logging to a file:
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="false" xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+    <appender name="FILE" class="org.apache.log4j.FileAppender">
+
+        <param name="file" value="logs/client/log.out"/>
+        <param name="immediateFlush" value="true"/>
+        <param name="threshold" value="debug"/>
+        <param name="append" value="false"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="conversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
+    <root>
+        <level value="DEBUG"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</log4j:configuration>
+```
 
 ### Create NCDS Session Client
 
