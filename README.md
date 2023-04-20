@@ -100,7 +100,7 @@ oauth.username.claim=preferred_username
 ```
 ### Logging Configuration
 
-To enable debug logging, edit the file (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/log4j.xml) and change the logging levels in whichever handler you would like output to go to.
+To enable debug logging, edit the file (https://github.com/Nasdaq/CloudDataService/blob/master/ncdssdk-client/src/main/resources/log4j.xml) and change line 18 to the logging level desired.
 
 For example, to enable debug logging to a file:
 ```xml
@@ -127,6 +127,7 @@ For example, to enable debug logging to a file:
 
 </log4j:configuration>
 ```
+Be sure to re-compile the SDK after making the above changes via `mvn clean install`.
 
 ### Create NCDS Session Client
 
