@@ -167,10 +167,10 @@ Get all available streams
 ## Using the SDK
 
 ### Getting list of data stream available
-List all available data stream for the user.
+List all available data topics for which a schema is available.
 ```java
 // Example1.java
-NCDSClient ncdsClient = new NCDSClient();
+NCDSClient ncdsClient = new NCDSClient(Properties securityCfg,Properties kafkaCfg);
 String[] topics = ncdsClient.ListTopicsForTheClient();
 System.out.println("Entitled DataSet Topics:" );
 for (String topicEntry : topics) {
@@ -190,7 +190,7 @@ NLSCTA
 This methods returns the schema for the stream in Apache Avro format (https://avro.apache.org/docs/current/spec.html).
 ```java
 // Example2.java
-NCDSClient ncdsClient = new NCDSClient();
+NCDSClient ncdsClient = new NCDSClient(Properties securityCfg,Properties kafkaCfg);
 String topic = "GIDS";
 String schema = ncdsClient.getSchemaForTheTopic(topic);
 System.out.println(schema);
@@ -243,7 +243,7 @@ Example output:
 This returns the first 10 available messages of the stream.
 ```java
 // Example2.java
-NCDSClient ncdsClient = new NCDSClient();
+NCDSClient ncdsClient = new NCDSClient(Properties securityCfg,Properties kafkaCfg);
 String topic="NLSCTA";
 ConsumerRecords<String, GenericRecord> records = ncdsClient.topMessages(topic);
 for (ConsumerRecord<String, GenericRecord> record : records) {
@@ -279,7 +279,7 @@ value:{"SoupPartition": 0, "SoupSequence": 10, "trackingID": 11231714853049, "ms
 This returns the first 10 available messages of the stream from given timestamp in milliseconds since the UNIX epoch.
 ```java
 // Example3.java
-NCDSClient ncdsClient = new NCDSClient();
+NCDSClient ncdsClient = new NCDSClient(Properties securityCfg,Properties kafkaCfg);
 String topic="NLSCTA";
 Long timestamp = 1590084445610L; // This is timestamp in millseconds from UNIX epoch. (https://currentmillis.com/)
 ConsumerRecords<String, GenericRecord> records = ncdsClient.topMessages(topic, timestamp);
@@ -317,7 +317,7 @@ value :{"SoupPartition": 0, "SoupSequence": 9362639, "trackingID": 5084560059456
 ### Get example message from stream
 Print message to the console for given message name.
 ```java
-NCDSClient ncdsClient = new NCDSClient();
+NCDSClient ncdsClient = new NCDSClient(Properties securityCfg,Properties kafkaCfg);
 String topic="GIDS"
 ncdsClient.getSampleMessages(topic, "SeqIndexDirectory");
 ```
@@ -328,7 +328,7 @@ Example output:
 
 ### Get Continuous stream
 ```java
-NCDSClient ncdsClient = new NCDSClient();
+NCDSClient ncdsClient = new NCDSClient(Properties securityCfg,Properties kafkaCfg);
 String topic="GIDS"
 Consumer consumer = ncdsClient.NCDSKafkaConsumer(topic);
 while (true) {
@@ -344,7 +344,7 @@ while (true) {
 
 ### Get News stream
 ```java
-NCDSClient ncdsClient = new NCDSClient();
+NCDSClient ncdsClient = new NCDSClient(Properties securityCfg,Properties kafkaCfg);
 String topic="NEWS-PRO-GLOBAL"
 Consumer consumer = ncdsClient.NCDSNewsKafkaConsumer(topic);
 while (true) {
