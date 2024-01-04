@@ -13,8 +13,8 @@ import org.apache.kafka.common.errors.WakeupException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -306,10 +306,10 @@ public class NCDSSession {
                 Set<String> msgTypeSet = null;
 
                 if (symbols != null) {
-                    symbolSet = Arrays.stream(symbols.split(",")).map(String::trim).collect(Collectors.toSet());
+                    symbolSet = new HashSet<>(Arrays.stream(symbols.split(",")).map(String::trim).collect(Collectors.toSet()));
                 }
                 if (msgTypes != null) {
-                    msgTypeSet = Arrays.stream(msgTypes.split(",")).map(String::trim).collect(Collectors.toSet());
+                    msgTypeSet = new HashSet<>(Arrays.stream(msgTypes.split(",")).map(String::trim).collect(Collectors.toSet()));
                 }
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 Consumer consumer;
@@ -361,6 +361,7 @@ public class NCDSSession {
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
             System.exit(1);
         }
     }

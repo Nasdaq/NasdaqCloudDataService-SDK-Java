@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.nasdaq.ncds</groupId>
         <artifactId>ncds</artifactId>
-        <version>0.7.0</version>
+        <version>0.8.4</version>
     </parent>
 
     <artifactId>ncdssdk-client</artifactId>
@@ -21,6 +21,22 @@
             <groupId>com.nasdaq.ncds</groupId>
             <artifactId>ncds-sdk</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <build>
@@ -57,7 +73,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.nasdaq.ncdsclient.NCDSSession
                                     </mainClass>
                                 </transformer>

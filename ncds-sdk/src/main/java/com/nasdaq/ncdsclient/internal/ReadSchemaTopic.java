@@ -31,7 +31,7 @@ public class ReadSchemaTopic {
     }
 
     public Schema readSchema(String topic) throws Exception {
-        KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
+        KafkaConsumer schemaConsumer= getConsumer(getClientID(securityProps));
         Duration sec = Duration.ofSeconds(10);
         Schema messageSchema = null;
         ConsumerRecord<String,GenericRecord> lastRecord=null;
@@ -88,7 +88,7 @@ public class ReadSchemaTopic {
 
         Set<String> topics = new HashSet<String>();
 
-        KafkaConsumer schemaConsumer= getConsumer("Control-"+getClientID(securityProps));
+        KafkaConsumer schemaConsumer= getConsumer(getClientID(securityProps));
         Duration sec = Duration.ofSeconds(10);
         while (true) {
             ConsumerRecords<String, GenericRecord> schemaRecords = schemaConsumer.poll(sec);
@@ -188,4 +188,4 @@ public class ReadSchemaTopic {
         return timestampFromMidnight;
     }
 
-   }
+}

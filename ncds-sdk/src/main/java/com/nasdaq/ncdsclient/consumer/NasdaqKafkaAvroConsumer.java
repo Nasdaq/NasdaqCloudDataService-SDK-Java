@@ -32,41 +32,37 @@ public class NasdaqKafkaAvroConsumer {
     private KafkaConsumer kafkaConsumer;
     private String clientID;
 
-    private Properties securityProps;
-    private Properties kafkaProps;
+    private Properties properties = new Properties();
     private ReadSchemaTopic readSchemaTopic = new ReadSchemaTopic();
 
     public NasdaqKafkaAvroConsumer(Properties securityCfg,Properties kafkaCfg ) throws Exception {
         try {
-            if  (kafkaCfg == null)
+            if (securityCfg == null) {
+                properties.setProperty(AuthenticationConfigLoader.OAUTH_CLIENT_ID, "unit-test"); // Just for the unit tests.
+            }
+            else {
+                properties.putAll(securityCfg);
+            }
+            if  (kafkaCfg == null) {
                 if (IsItJunit.isJUnitTest()) {
                     Properties junitKafkaCfg = KafkaConfigLoader.loadConfig();
-                    kafkaProps = junitKafkaCfg;
+                    properties.putAll(junitKafkaCfg);
                 }
                 else {
                     throw new Exception("Kafka Configuration not Defined ");
                 }
-
-            else {
-                kafkaProps = kafkaCfg;
-                KafkaConfigLoader.validateAndAddSpecificProperties(kafkaProps);
-            }
-
-            if (securityCfg == null) {
-                securityProps = new Properties();
-                securityProps.setProperty(AuthenticationConfigLoader.OAUTH_CLIENT_ID, "unit-test"); // Just for the unit tests.
             }
             else {
-                securityProps = securityCfg;
-
+                properties.putAll(kafkaCfg);
+                KafkaConfigLoader.validateAndAddSpecificProperties(properties);
             }
         }
         catch (Exception e) {
             throw (e);
         }
-        readSchemaTopic.setSecurityProps(securityProps);
-        readSchemaTopic.setKafkaProps(kafkaProps);
-        this.clientID = getClientID(securityProps);
+        readSchemaTopic.setSecurityProps(properties);
+        readSchemaTopic.setKafkaProps(properties);
+        this.clientID = getClientID(properties);
 
     }
 
@@ -86,7 +82,7 @@ public class NasdaqKafkaAvroConsumer {
             kafkaConsumer = getConsumer(kafkaSchema, streamName);
             TopicPartition topicPartition = new TopicPartition(streamName + ".stream",0);
             kafkaConsumer.assign(Collections.singletonList(topicPartition));
-            if(kafkaProps.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).equals(OffsetResetStrategy.EARLIEST.toString().toLowerCase())) {
+            if(properties.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).equals(OffsetResetStrategy.EARLIEST.toString().toLowerCase())) {
                 return seekToMidNight(topicPartition);
             }
         }
@@ -144,21 +140,20 @@ public class NasdaqKafkaAvroConsumer {
 
     public  KafkaAvroConsumer getConsumer(Schema avroSchema, String streamName) throws Exception {
         try {
-            if(!IsItJunit.isJUnitTest()) {
-                ConfigProperties.resolveAndExportToSystemProperties(securityProps);
-            }
+//            if(!IsItJunit.isJUnitTest()) {
+//                ConfigProperties.resolveAndExportToSystemProperties(securityProps);
+//            }
             //Properties kafkaProps = KafkaConfigLoader.loadConfig();
 
-            kafkaProps.put("key.deserializer", StringDeserializer.class.getName());
-            kafkaProps.put("value.deserializer", AvroDeserializer.class.getName());
-            if(!kafkaProps.containsKey(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)) {
-                kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OffsetResetStrategy.EARLIEST.toString().toLowerCase());
+            properties.put("key.deserializer", StringDeserializer.class.getName());
+            properties.put("value.deserializer", AvroDeserializer.class.getName());
+            if(!properties.containsKey(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG)) {
+                properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OffsetResetStrategy.EARLIEST.toString().toLowerCase());
             }
-            if(!kafkaProps.containsKey(ConsumerConfig.GROUP_ID_CONFIG)) {
-                kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID + "_" + streamName + "_" + getDate());
+            if(!properties.containsKey(ConsumerConfig.GROUP_ID_CONFIG)) {
+                properties.put(ConsumerConfig.GROUP_ID_CONFIG, this.clientID);// + "_" + streamName + "_" + getDate());
             }
-            ConfigProperties.resolve(kafkaProps);
-            return new KafkaAvroConsumer(kafkaProps, avroSchema);
+            return new KafkaAvroConsumer(properties, avroSchema);
         }
         catch (Exception e) {
             throw e;
@@ -211,7 +206,7 @@ public class NasdaqKafkaAvroConsumer {
             kafkaConsumer = getConsumer(newsSchema, topic);
             TopicPartition topicPartition = new TopicPartition(topic + ".stream",0);
             kafkaConsumer.assign(Collections.singletonList(topicPartition));
-            if(kafkaProps.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).equals(OffsetResetStrategy.EARLIEST.toString().toLowerCase())) {
+            if(properties.get(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG).equals(OffsetResetStrategy.EARLIEST.toString().toLowerCase())) {
                 return seekToMidNight(topicPartition);
             }
             return kafkaConsumer;

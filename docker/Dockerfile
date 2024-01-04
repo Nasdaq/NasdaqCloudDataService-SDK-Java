@@ -10,7 +10,7 @@ RUN mvn -B \
 
 ### Build Images ###
 ## SDK app ##
-FROM strimzi/kafka:0.20.0-kafka-2.6.0 as sdk-app
+FROM quay.io/strimzi/kafka:0.32.0-kafka-3.3.1 as sdk-app
 
 COPY . /home/kafka
 

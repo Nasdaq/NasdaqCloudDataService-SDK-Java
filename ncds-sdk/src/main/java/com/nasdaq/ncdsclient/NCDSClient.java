@@ -30,6 +30,7 @@ public class NCDSClient {
     /**
      *
      * @param securityCfg  - Authentication Security Properties passed from the Client
+     * @param kafkaCfg
      * @throws Exception   - Java Exception
      */
     public NCDSClient(Properties securityCfg,Properties kafkaCfg) throws Exception {

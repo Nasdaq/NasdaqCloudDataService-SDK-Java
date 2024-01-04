@@ -7,119 +7,111 @@
     <parent>
         <groupId>com.nasdaq.ncds</groupId>
         <artifactId>ncds</artifactId>
-        <version>0.7.0</version>
+        <version>0.8.4</version>
     </parent>
 
     <artifactId>ncds-sdk</artifactId>
     <packaging>jar</packaging>
     <properties>
-        <kafkaScalaVersion>kafka_2.12</kafkaScalaVersion>
-        <junit5.version>5.7.2</junit5.version>
         <junit5PlatformProvider.version>1.3.2</junit5PlatformProvider.version>
-        <curatorTestVersion>2.12.0</curatorTestVersion>
-        <slf4jVersion>1.7.30</slf4jVersion>
         <surefire.version>2.22.2</surefire.version>
-        <strimzi.oauth.version>0.8.1</strimzi.oauth.version>
     </properties>
+
 
     <name>SDK</name>
     <description>Provide Development Kit to connect with Kafka</description>
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20190722</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Kafka -auth -->
         <dependency>
             <groupId>io.strimzi</groupId>
             <artifactId>kafka-oauth-common</artifactId>
-            <version>${strimzi.oauth.version}</version>
         </dependency>
 
         <!--  Testing -->
 
-            <!-- Kafka -->
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>${kafkaScalaVersion}</artifactId>
-                <version>${kafka.version}</version>
-                <exclusions>
-                    <!-- Don't bring in kafka's logging framework -->
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-log4j12</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.mail</groupId>
-                        <artifactId>mail</artifactId>
-                    </exclusion>
-                </exclusions>
-                <scope>test</scope>
-            </dependency>
+        <!-- Kafka -->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_2.12</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.salesforce.kafka.test</groupId>
             <artifactId>kafka-junit-core</artifactId>
-            <version>3.2.3</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- JUnit5 tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit5.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit5.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Mockito for mocks in tests -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.28.2</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-test</artifactId>
-            <version>${curatorTestVersion}</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Logging in tests -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4jVersion}</version>
-            <scope>test</scope>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <!-- Testing support class -->
         <dependency>
             <groupId>com.github.stephenc.high-scale-lib</groupId>
             <artifactId>high-scale-lib</artifactId>
-            <version>1.1.4</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
