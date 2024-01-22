@@ -76,19 +76,6 @@ retry.backoff.ms=500
 max.poll.records=2000
 ```
  
- The consumer configuration gives the ability to fix a consumer group id which is important for production usage. Setting the consumer group id explicitly allows the kafka administrator to add protections around your production feed. 
- The following is an example of a fixed consumer group id convention
- ```properties
- group.id: {oauth.client.id}_{environment}_{feedname}
- ```
- The following is an example of the group id filled in:
-  ```properties
- group.id: testuser_pro_totalview
- ```
- Please note that if you fix the consumer group id in your client, you will continue at the last offset that was consumed from kafka. This is a way promote availability for your application as the app will begin where it left off given a disconnection. 
- 
- Also, if you are using the SDK for interactive query, you will also be consuming from where you last consumed. The consumer group id effectively saves the last offset that you have ingested.
- 
 =======
 
 ### Client Authentication configuration
