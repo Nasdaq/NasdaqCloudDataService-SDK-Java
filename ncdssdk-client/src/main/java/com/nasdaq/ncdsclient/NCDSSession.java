@@ -158,7 +158,7 @@ public class NCDSSession {
         NCDSClient ncdsClient = null;
 
         try {
-            if  (testOption.equals("TOP")) {
+            if  ("TOP".equals(testOption)) {
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 int numOfRecords = Math.min(Integer.parseInt(numberOfTopMessage),999);
                 if (numOfRecords == 0) {
@@ -194,7 +194,7 @@ public class NCDSSession {
                     System.out.println("Access to topic is not granted ");
                 }
             }
-            else if  (testOption.equals("METRICS")) {
+            else if  ("METRICS".equals(testOption)) {
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 Map<MetricName, ? extends Metric> metrics = ncdsClient.getMetrics(topic);
                 System.out.println("Retrieve the Metrics for the Topic:" +  topic );
@@ -203,7 +203,7 @@ public class NCDSSession {
 
                 }
             }
-            else if (testOption.equals("SCHEMA")) {
+            else if ("SCHEMA".equals(testOption)) {
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 // Dump the Schema for the topic
                 String schema = ncdsClient.getSchemaForTheTopic(topic);
@@ -215,10 +215,10 @@ public class NCDSSession {
                     System.out.println(" Access to topic is not granted ");
                 }
             }
-            else if (testOption.equals("GETMSG")) {
+            else if ("GETMSG".equals(testOption)) {
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 System.out.println("Finding the message");
-                if (kafkaConfig.containsKey("auto.offset.reset") && kafkaConfig.getProperty("auto.offset.reset").equals("latest")){
+                if (kafkaConfig.containsKey("auto.offset.reset") && "latest".equals(kafkaConfig.getProperty("auto.offset.reset"))){
                     System.out.println("Need to get run GETMSG with `earliest` offset");
                     System.exit(0);
                 }
@@ -230,16 +230,16 @@ public class NCDSSession {
                     System.out.println(" Message Not Found ... ");
                 }
             }
-            else if (testOption.equals("GETALLMSGS")){
+            else if ("GETALLMSGS".equals(testOption)){
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 System.out.println("Finding the messages");
-                if (kafkaConfig.containsKey("auto.offset.reset") && kafkaConfig.getProperty("auto.offset.reset").equals("latest")){
+                if (kafkaConfig.containsKey("auto.offset.reset") && "latest".equals(kafkaConfig.getProperty("auto.offset.reset"))){
                     System.out.println("Need to get run GETMSG with `earliest` offset");
                     System.exit(0);
                 }
                 ncdsClient.getSampleMessages(topic, messageName, true);
             }
-            else if (testOption.equals("TOPICS")){
+            else if ("TOPICS".equals(testOption)){
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 String[] topics = ncdsClient.ListTopicsForTheClient();
                 System.out.println("List of streams available on Nasdaq Cloud DataService:" );
@@ -247,7 +247,7 @@ public class NCDSSession {
                     System.out.println(topicEntry);
                 }
             }
-            else if (testOption.equals("NEWS")){
+            else if ("NEWS".equals(testOption)){
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 Consumer ncdsmtNewsKafkaConsumer = ncdsClient.NCDSNewsKafkaConsumer(topic);
                 System.out.println("Now starting the news!!" );
@@ -273,7 +273,7 @@ public class NCDSSession {
                 }
 
             }
-            else if (testOption.equals("CONTSTREAM")) {
+            else if ("CONTSTREAM".equals(testOption)) {
                 ncdsClient = new NCDSClient(securityCfg,kafkaConfig);
                 Consumer consumer;
                 if (timestamp == null){
@@ -301,7 +301,7 @@ public class NCDSSession {
                     consumer.close();
                 }
             }
-            else if( testOption.equals("FILTERSTREAM")){
+            else if( "FILTERSTREAM".equals(testOption)){
                 Set<String> symbolSet = null;
                 Set<String> msgTypeSet = null;
 
@@ -335,7 +335,7 @@ public class NCDSSession {
                             if (symbolField != null) {
                                 sym = ((org.apache.avro.util.Utf8) record.value().get(symbolField.pos())).toString().trim();
                             }
-                            if (msgType != null && !msgType.equals("")) {
+                            if (msgType != null && !"".equals(msgType)) {
                                 msg_t = msgType.trim();
                             }
 
