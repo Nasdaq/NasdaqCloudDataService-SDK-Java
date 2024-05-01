@@ -7,7 +7,6 @@ import com.nasdaq.ncdsclient.internal.utils.AuthenticationConfigLoader;
 import com.nasdaq.ncdsclient.internal.utils.IsItJunit;
 import com.nasdaq.ncdsclient.internal.utils.KafkaConfigLoader;
 import com.nasdaq.ncdsclient.news.NewsUtil;
-import io.strimzi.kafka.oauth.common.ConfigProperties;
 import org.apache.avro.Schema;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -214,14 +213,6 @@ public class NasdaqKafkaAvroConsumer {
         catch (Exception e){
             throw (e);
         }
-    }
-
-    private String getDate(){
-        // Get Today's EST date
-        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-        dateformat.setTimeZone(TimeZone.getTimeZone("America/New_York"));
-        String date = dateformat.format(new Date());
-        return date;
     }
 
     private KafkaConsumer seekToMidNight(TopicPartition topicPartition){
