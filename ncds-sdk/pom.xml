@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.nasdaq.ncds</groupId>
         <artifactId>ncds</artifactId>
-        <version>0.8.5</version>
+        <version>0.9.0</version>
     </parent>
 
     <artifactId>ncds-sdk</artifactId>
@@ -56,12 +56,6 @@
             <artifactId>slf4j-simple</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Kafka -auth -->
-        <dependency>
-            <groupId>io.strimzi</groupId>
-            <artifactId>kafka-oauth-common</artifactId>
-        </dependency>
-
         <!--  Testing -->
 
         <!-- Kafka -->

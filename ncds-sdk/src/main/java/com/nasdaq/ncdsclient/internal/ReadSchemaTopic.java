@@ -2,7 +2,6 @@ package com.nasdaq.ncdsclient.internal;
 
 import com.nasdaq.ncdsclient.internal.utils.IsItJunit;
 import com.nasdaq.ncdsclient.internal.utils.KafkaConfigLoader;
-import io.strimzi.kafka.oauth.common.ConfigProperties;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.clients.consumer.*;
@@ -121,9 +120,9 @@ public class ReadSchemaTopic {
         //Properties kafkaProps = null;
         try {
 
-            if(!IsItJunit.isJUnitTest()) {
-                ConfigProperties.resolveAndExportToSystemProperties(securityProps);
-            }
+//            if(!IsItJunit.isJUnitTest()) {
+//                ConfigProperties.resolveAndExportToSystemProperties(securityProps);
+//            }
 
             Schema.Parser parser = new Schema.Parser();
             //controlMessageSchema = parser.parse(ClassLoader.getSystemResourceAsStream("ControlMessageSchema.avsc"));
@@ -137,7 +136,7 @@ public class ReadSchemaTopic {
             kafkaProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OffsetResetStrategy.EARLIEST.toString().toLowerCase());
             kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, cleindId);
             kafkaProps.put(ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG, "5048576");
-            ConfigProperties.resolve(kafkaProps);
+//            ConfigProperties.resolve(kafkaProps);
         }
         catch (Exception e) {
             throw e;
