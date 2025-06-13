@@ -37,7 +37,8 @@ This repository provides an SDK for developing applications to access Nasdaq Dat
 ### Mutual Funds
 - [Nasdaq Fund Network](http://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NFNDS_NCDS.pdf)
 ### News
-- [Financial News](http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)
+- [Financial News - MT Newswires](http://nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/MTNewswires-cloud.pdf)
+- [Benzinga Market Newswires](https://data.nasdaq.com/databases/BENZ)
 
 # Table of Contents
 - [Getting Started](#Getting-Started)
