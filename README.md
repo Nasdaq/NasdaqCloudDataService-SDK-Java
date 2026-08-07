@@ -12,6 +12,7 @@ This repository provides an SDK for developing applications to access Nasdaq Dat
 - [Nasdaq Last Sale+](https://assets.ctfassets.net/mx0rke14e5yt/3QdPbjB96Z0Atz61FlQ4b4/63d4dd264bfc3c8a7653adef1b83e4c2/2-13_NewLastSale_Cloud-2025-1.pdf) (real-time & delayed)
 - [Nasdaq TotalView](https://assets.ctfassets.net/mx0rke14e5yt/4dUk9wkzHqggnKqfCtLMDz/78029c0f20980400baf218c993f3f11d/2-13_Nasdaq_ITCH_Products_5.pdf)
 - [Nasdaq Consolidated Quotes and Trades](https://assets.ctfassets.net/mx0rke14e5yt/19Ud7WoFVS17VcIk4efxNd/aa7a3bd8888cce5e85850da88cc4a352/2-13CQT-cloud.pdf) (real-time & delayed)
+- [Nasdaq Retail Equity Pulse](https://assets.ctfassets.net/mx0rke14e5yt/v8xijLGCLz99e4ToQZd9w/f71f98bbdedef9dd4bcfb8347e30c193/Retail_Equity_Pulse_-_Nasdaq_Data_Link_Format.pdf)
 #### Nasdaq Texas
 - [Texas BBO](https://assets.ctfassets.net/mx0rke14e5yt/1BMqS6qxiLo3nrdRWvoPYR/85ee6d7502d8929d31b0acfaff5d92f2/NasdaqBBO_Cloud-2025.pdf)
 - [Texas Last Sale](https://assets.ctfassets.net/mx0rke14e5yt/3QdPbjB96Z0Atz61FlQ4b4/63d4dd264bfc3c8a7653adef1b83e4c2/2-13_NewLastSale_Cloud-2025-1.pdf)
